@@ -1,0 +1,54 @@
+<script>
+	$(function(){
+		$('.add-role').click(function(){
+			var obj=$(this).parents('dl').clone();
+			obj.find('.add-role').remove();
+			$('#last').before(obj);
+		});
+	})
+</script>
+<style>
+	.add-role{
+		display: inline-block;
+		width: 100px;
+		height: 26px;
+		line-height: 28px;
+		text-align: center;
+		border: 1px solid blue;
+		border-radius: 4px;
+		margin-left: 20px;
+		cursor: pointer;;
+	}
+</style>
+<div class="pageContent">
+	<form method="post" action="__URL__/insert/navTabId/service/callbackType/closeCurrent"  class="pageForm required-validate" 
+		onsubmit="return validateCallback(this,dialogAjaxDone);"><?php  //窗体组件采用这个 iframeCallback(this, navTabAjaxDone); ?>
+		<div class="pageFormContent" width="100%" layoutH="60">
+			<dl>
+				<dt>服务名：</dt>
+				<dd><input type="text" class="required"  style="width:100%" name="name"/></dd>
+			</dl>
+			<dl>
+
+			<dl style="width:500px;">
+				<dt>等级级别:</dt>
+				<dd style="width:300px">
+					<select name="level">
+						<option value="">请选择级别</option>
+					    <option value="1">1</option>
+						<option value="2">2</option>
+					</select>
+				</dd>
+			</dl>
+			<p id="last"></p>
+		</div>
+		
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">保存</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+</div>
+
