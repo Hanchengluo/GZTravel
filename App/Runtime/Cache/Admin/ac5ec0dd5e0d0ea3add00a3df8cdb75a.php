@@ -81,7 +81,7 @@ $(function(){
 					</div>
 					<div class="accordionContent">
 						<ul class="tree treeFolder">
-							<li><a href="<?php echo U('Jingqu/index');?>" target="navTab" rel="listusers" title="景区列表" >景区列表</a></li>
+							<li><a href="<?php echo U('Jingqu/index');?>" target="navTab" rel="jingqu" title="景区列表" >景区列表</a></li>
 							<li><a href="<?php echo U('Jingdian/index');?>" target="dialog" width="600" height="300" title="景点列表" >景点列表</a></li>
 						</ul>
 					</div>
