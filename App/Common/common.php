@@ -60,10 +60,10 @@ function rubbish($status, $id, $callback=""){
 function crubbish($status, $id, $callback=""){
 	switch ($status) {
 		case 1 :
-			$info = '<a href="__URL__/changeState/commend_id/'.$id.'/islock/1/navTabId/listcomment1" target="ajaxTodo" callback="'.$callback.'">恢复显示</a>';
+			$info = '<a href="__URL__/changeState/id/'.$id.'/islock/1/navTabId/rubbish" target="ajaxTodo" callback="'.$callback.'">恢复显示</a>';
 			break;
 		case 0 :
-			$info = '<a href="__URL__/changeState/commend_id/'.$id.'/islock/0/navTabId/listcomment" target="ajaxTodo" callback="'.$callback.'">加入回收站</a>';
+			$info = '<a href="__URL__/changeState/id/'.$id.'/islock/0/navTabId/zuobiao" target="ajaxTodo" callback="'.$callback.'">加入回收站</a>';
 			break;
 	}
 	return $info;
