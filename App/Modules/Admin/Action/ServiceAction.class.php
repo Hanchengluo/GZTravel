@@ -7,11 +7,11 @@
 class ServiceAction extends CommonAction{
 	public function index() {
 
-		$map = $this->_search('areaservice');
+		$map = $this->_search('Areaservice');
 		if(method_exists($this, '_filter')) {
 			$this->_filter($map);
 		}
-		$model = M('areaservice');
+		$model = M('Areaservice');
 		if (!empty($model)) {
 			$this->_list($model, $map);
 		}
@@ -30,16 +30,19 @@ class ServiceAction extends CommonAction{
 	}	
 	
 	public function add() {
-		$role=M('role')->select();
-		$this->assign('role',$role);
-		$this->display('add');
+		$m=M('Areaservice');
+		$data['level']=1;
+		$aslist=$m->where($data)->select();
+		$this->assign('aslist',$aslist);
+		$this->display();
 	}
 	
 	public function insert(){
 		//用户信息
 		$service=array(
 			'name'=>I('name'),
-			'level'=>I('level')
+			'level'=>I('level'),
+			'pid'=>I('pid')
 			);
 		
 		//所属角色
@@ -56,7 +59,11 @@ class ServiceAction extends CommonAction{
 		$id = $_REQUEST[$model->getPk()];
 		$vo = $model->find($id);
 		$this->assign('vo', $vo);
+		$data['level']=1;
+		$aslist=$model->where($data)->select();
+		$this->assign('aslist',$aslist);
 		$this->display('edit');
+		
 	}
 	public function lock(){
 		$model = M('Areaservice');

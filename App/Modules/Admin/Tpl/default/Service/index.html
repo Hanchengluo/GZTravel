@@ -15,7 +15,8 @@
 			<tr>
 				<th width="10">ID</th>
 				<th width="40">服务名</th>
-				<th width="30">等级</th>
+				<th width="30">级别</th>
+				<th width="30">所属父级</th>
 				<th width="30">状态</th>
 				<th width="30">操作</th>	
 			</tr>
@@ -26,6 +27,7 @@
 					<td><{$vo.id}></td>
 					<td><{$vo.name}></td>
 					<td><{$vo.level}></td>
+					<td><{$vo.pid}></td>
 					<td><{$vo.islock|islock=###}></td>
                     <td>
 <script>

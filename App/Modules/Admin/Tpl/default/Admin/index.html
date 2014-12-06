@@ -17,6 +17,7 @@
 				<th width="10">ID</th>
 				<th width="30">用户名</th>
 				<th width="40">上次登陆时间</th>
+				<th width="40">上次登陆IP</th>
 				<th width="40">所属组别</th>
 				<th width="40">状态</th>
 				<th width="40">操作</th>	
@@ -28,6 +29,7 @@
 					<td><{$vo.id}></td>
 					<td><{$vo.username}></td>
 					<td><{$vo.logintime|date="Y-m-d H:i:s",###}></td>
+					<td><{$vo.loginip}></td>
 					<td>
 						<if condition="$vo['username']==C('RBAC_SUPERADMIN')">
 						<b>超级管理员</b>

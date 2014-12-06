@@ -39,7 +39,8 @@ class AdminAction extends CommonAction{
 			$user=array(
 				'username'=>I('username'),
 				'password'=>I('password','','md5'),
-				'logintime'=>time()
+				'logintime'=>time(),
+				'loginip'=>get_client_ip()
 			);
 
 		if ($uid=M('Admin')->add($user)) {

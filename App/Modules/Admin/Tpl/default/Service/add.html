@@ -37,8 +37,18 @@
 						<option value="">请选择级别</option>
 					    <option value="1">1</option>
 						<option value="2">2</option>
+						<option value="3">3</option>
 					</select>
 				</dd>
+			</dl>
+			<dl style="width:500px;">
+			<dt>所属上级:</dt>
+			<select name="pid">
+				<foreach name="aslist" item="vo">
+					<option value="<{$vo.id}>" ><{$vo.name}></option>
+				</foreach>
+			</select>
+			</dd>
 			</dl>
 			<p id="last"></p>
 		</div>

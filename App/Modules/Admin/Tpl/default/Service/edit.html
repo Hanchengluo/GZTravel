@@ -10,15 +10,27 @@
 				<dd><input type="text" class="required"  style="width:100%" name="name" value="<{$vo.name}>"/></dd>
 			    </dl>
 				<dl style="width:500px;">
-					<dt>更改角色:</dt>
-					<dd style="width:300px">
-						<select name="level">
-							<option value="">请选择级别</option>
-							<option value="1"<if condition="$vo['level'] eq 1">selected</if>>1</option>
-							<option value="2"<if condition="$vo['level'] eq 2">selected</if>>2</option>
-						</select>
-					</dd>
-				</dl>
+				<dt>等级级别:</dt>
+				<dd style="width:300px">
+					<select name="level">
+						<option value="">请选择级别</option>
+					    <option value="1"<if condition="$vo['level'] eq 1">selected</if>>1</option>
+						<option value="2"<if condition="$vo['level'] eq 2">selected</if>>2</option>
+						<option value="3"<if condition="$vo['level'] eq 3">selected</if>>3</option>
+					</select>
+				</dd>
+			</dl>
+			 <if condition="$vo['pid'] neq 0">
+			<dl style="width:500px;">
+			<dt>所属上级:</dt>
+			<select name="pid" >
+				<foreach name="aslist" item="volist">
+					<option value="<{$volist.id}>" <if condition="$vo['pid'] eq $volist['id']">selected</if>><{$volist.name}></option>
+				</foreach>
+			</select>
+			</dd>
+			</dl>
+			</if>
 				<p id="last"></p>
 			</dl>
 		</div>
