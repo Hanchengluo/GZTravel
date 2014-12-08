@@ -55,7 +55,7 @@ class AdminAction extends CommonAction{
 	
 	public function editpwd(){
 	    if($_SESSION[C('ADMIN_AUTH_KEY_B')] == C('RBAC_SUPERADMIN')){
-			$model = M('admin');
+			$model = M('Admin');
 			$id = $_REQUEST[$model->getPk()];
 			$vo = $model->find($id);
 			$this->assign('vo', $vo);
@@ -65,7 +65,23 @@ class AdminAction extends CommonAction{
 		}
 		
 	}
-
+	public function updatepwd() {
+		$model = M('Admin');
+		$data['id'] = I('id');
+		$data['password'] = I('password','','md5');
+		// 更新数据
+		if(false !== $model->save($data)) {
+			// 回调接口
+			if (method_exists($this, '_tigger_update')) {
+				$this->_tigger_update($model);
+			}
+			//成功提示
+			$this->success(L('更新成功'));
+		} else {
+			//错误提示
+			$this->error(L('更新失败'));
+		}
+	}
 	public function delete() {
 		if($_SESSION[C('ADMIN_AUTH_KEY_B')] == C('RBAC_SUPERADMIN')){
 			$model = M('admin');
