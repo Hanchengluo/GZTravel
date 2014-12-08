@@ -1,0 +1,81 @@
+<div class="pageContent">
+	<form method="post" action="__URL__/insert/navTabId/zuobiao/callbackType/closeCurrent"  
+		onsubmit="return validateCallback(this,dialogAjaxDone);" target="dialog">
+		<div class="pageFormContent" layoutH="60" style="width:50%;float:left">
+			<dl>
+			<dt>所属类别:</dt>
+			<dd>
+			<select name="as_id" style="width:100%">
+				<foreach name="aslist" item="vo">
+					<option value="<{$vo.id}>" ><{$vo.name}></option>
+				</foreach>
+			</select>
+			</dd>
+			</dl>
+			<dl>
+				<dt>坐标名称</dt>
+				<dd><input type="text" class="required"  style="width:100%" name="name"/></dd>
+			</dl>
+			<dl>
+				<dt>原始经度</dt>
+				<dd><input type="text" class="required"  style="width:100%" name="pointlng" id="pointlng"/></dd>
+			</dl>
+			<dl>
+				<dt>原始纬度</dt>
+				<dd><input type="text" class="required"  style="width:100%" name="pointlat" id="pointlat"/></dd>
+			</dl>
+			<dl>
+				<dt>百度经度</dt>
+				<dd><input type="text" class="required"  style="width:100%" name="bpointlng" id="bpointlng" onclick="translateZuobiao();"/></dd>
+			</dl>
+			<dl>
+				<dt>百度纬度</dt>
+				<dd><input type="text" class="required"  style="width:100%" name="bpointlat" id="bpointlat" onclick="translateZuobiao();"/></dd>
+			</dl>
+		</div>
+		<div id="allmap" style="width:50%;float:left;margin-top:20px;"></div>
+			<script>
+					//地图属性
+				$("#allmap").css({
+				"width":"380px",
+				"height":"360px",
+				"overflow":"hidden",
+				"margin":"10",
+				"font-family":"微软雅黑"
+				});
+
+				// 百度地图API功能
+				var map = new BMap.Map("allmap");    // 创建Map实例
+				map.centerAndZoom(new BMap.Point(106.655, 26.653), 13);  // 初始化地图,设置中心点坐标和地图级别
+				map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+				map.setCurrentCity("贵州");          // 设置地图显示的城市 此项是必须设置的
+				map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+				map.addControl(new BMap.NavigationControl());
+				function translateZuobiao() {
+					var gpsPoint = new BMap.Point($('#pointlng').val(),$('#pointlat').val());
+					//坐标转换完之后的回调函数
+					translateCallback = function (point){
+						$('#bpointlng').val(point.lng);
+						$('#bpointlat').val(point.lat);
+						var allOverlay = map.getOverlays();
+						map.removeOverlay(allOverlay[0]);
+						var marker = new BMap.Marker(point);
+						map.addOverlay(marker);
+						var label = new BMap.Label("百度标注",{offset:new BMap.Size(20,-10)});
+						marker.setLabel(label); //添加百度label
+						marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+						map.setCenter(point);
+					}
+					BMap.Convertor.translate(gpsPoint,0,translateCallback);
+				}
+			</script>
+			
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">保存</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+</div>
+

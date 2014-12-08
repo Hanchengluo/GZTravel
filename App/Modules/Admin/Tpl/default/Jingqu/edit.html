@@ -1,0 +1,130 @@
+
+<div class="pageContent">
+	<form method="post" action="__URL__/update/navTabId/jingqu/callbackType/closeCurrent"  class="pageForm required-validate" 
+		onsubmit="return validateCallback(this,navTabAjaxDone);">
+		<input type="hidden" name="id" value="<{$vo.id}>"/>
+		<div class="pageFormContent" layoutH="60">
+			<dl>
+				<dt>景区名：</dt>
+				<dd>
+				<input type="hidden"  id="name" name="name"/>
+				<input id="name1" type="text" class="required"  style="width:70%" name="orgLookup.orgName" value="<{$vo.name}>" suggestFields="orgName" lookupGroup="orgLookup" />
+				<a class="btnLook" href="__URL__/zuobiao" width="650" height="400" rel="zbadd" lookupgroup="orgLookup">坐标选定</a>
+				</dd>
+			</dl>
+			<dl>
+				<dt>语音介绍：</dt>
+				<dd>
+				<input type="file" style="width:70%" name="videourl"  
+					uploaderOption="{
+					swf:'../Public/dwz/uploadify/scripts/uploadify.swf',
+					uploader:'__URL__/upload/navTabId/jingqu/callbackType/closeCurrent',
+					formData:{PHPSESSID:'xxx', ajax:1},
+					queueID:'fileQueue',
+					buttonImage:'../Public/dwz/uploadify/img/add.jpg',
+					buttonClass:'my-uploadify-button',
+					width:80,
+					auto:false
+					}"
+				/>
+				</dd>
+			</dl>
+			<dl class="nowrap">
+				<dt>景区简介：</dt>
+				<dd>
+				<textarea class="required textInput valid" style="width:95%" name="title"><{$vo.title}></textarea>
+				</dd>
+			</dl>
+			<dl  class="nowrap">
+				<dt>景区描述：</dt>
+				<dd>
+					<textarea id="elm2"  name="comment"  style="width:100%;display: none;" rows="13" ><{$vo.comment}>
+					</textarea>
+					<script>
+						$('#elm2').xheditor({tools:'Fullscreen',upLinkUrl:"__URL__/upload",upLinkExt:"zip,rar,txt",upImgUrl:"__URL__/upload",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"__URL__/upload",upFlashExt:"swf",upMediaUrl:"__URL__/upload",upMediaExt:"avi",urlBase:'__ROOT__/'});
+					</script>
+				</dd>
+			</dl>
+			<dl>
+				<dt>是否推荐：</dt>
+				<dd>
+				是<input type="radio" class="required"   name="recommend" value="1" <if condition="$vo['recommend'] eq 1">checked</if> />&nbsp;&nbsp;&nbsp;否<input type="radio" class="required"   name="recommend" value="0" <if condition="$vo['recommend'] eq 0">checked</if> />
+				</dd>
+			</dl>
+			<dl>
+				<dt>门票价格：</dt>
+				<dd><input type="text" class="required"  style="width:70%" name="pay" value="<{$vo.pay}>"/>&nbsp &nbsp 元</dd>
+			</dl>
+			<dl>
+				<dt>开始时间：</dt>
+				<dd><input id="timepicker1" type="text" class="required"  style="width:70%" name="starttime" value="<{$vo.starttime}>"/></dd>
+			</dl>
+			<dl>
+				<dt>结束时间：</dt>
+				<dd><input id="timepicker2" type="text" class="required"  style="width:70%" name="endtime" value="<{$vo.endtime}>"/></dd>
+			</dl>
+			<script>
+				$('#timepicker1').datetimepicker({
+					datepicker:false,
+					format:'H:i:00',
+					step:30
+				});
+				$('#timepicker2').datetimepicker({
+					datepicker:false,
+					format:'H:i:00',
+					step:30
+				});
+			</script>
+			<dl>
+				<dt>人均消费：</dt>
+				<dd><input type="text" class="required"  style="width:70%" name="evgcost" value="<{$vo.evgcost}>"/>&nbsp &nbsp元</dd>
+			</dl>
+
+			<dl>
+				<dt>交通信息：</dt>
+				<dd><input type="text" class="required"  style="width:70%" name="traffic" value="<{$vo.traffic}>"/></dd>
+			</dl>
+			<dl>
+				<dt>地址信息：</dt>
+				<dd>
+				<input type="text" class="required"  style="width:70%" name="address" value="<{$vo.address}>"/>
+				</dd>
+			</dl>
+			<dl>
+				<dt>联系方式：</dt>
+				<dd><input type="text" class="required"  style="width:70%" name="tel" value="<{$vo.tel}>"/></dd>
+			</dl>
+			<dl>
+				<dt>经度坐标：</dt>
+				<dd>
+				<input type="hidden"  id="pointlng" name="pointlng"/>
+				<input type="text" id="pointlng1" class="required"  style="width:70%" name="orgLookup.orgPointlng" readonly="readonly" value="<{$vo.pointlng}>" suggestFields="orgPointlng" lookupGroup="orgLookup" />
+				</dd>
+			</dl>
+			<dl>
+				<dt>纬度坐标：</dt>
+				<dd>
+				<input type="hidden"  id="pointlat" name="pointlat"/>
+				<input type="text" id="pointlat1" class="required"  readonly="readonly" style="width:70%" name="orgLookup.orgPointlat" value="<{$vo.pointlat}>" suggestFields="orgPointlng" lookupGroup="orgLookup" />
+				</dd>
+			</dl>
+			<script>
+			   function setValue() {
+			   		$('#name').val($('#name1').val());
+					$('#pointlng').val($('#pointlng1').val());
+					$('#pointlat').val($('#pointlat1').val());
+				}
+			</script>
+		</div>
+		
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit" onclick="return setValue();">保存</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+</div>
+
+
+
