@@ -19,11 +19,11 @@
 			</dl>
 			<dl>
 				<dt>经度坐标</dt>
-				<dd><input type="text" class="required"  style="width:100%" name="pointlng" id="pointlng" value="<{$vo.pointlng}>"/></dd>
+				<dd><input type="text" style="width:100%" name="pointlng" id="pointlng" value="<{$vo.pointlng}>"/></dd>
 			</dl>
 			<dl>
 				<dt>纬度坐标</dt>
-				<dd><input type="text" class="required"  style="width:100%" name="pointlat" id="pointlat" value="<{$vo.pointlat}>"/></dd>
+				<dd><input type="text" style="width:100%" name="pointlat" id="pointlat" value="<{$vo.pointlat}>"/></dd>
 			</dl>
 			<dl>
 				<dt>百度经度</dt>
@@ -47,12 +47,18 @@
 
 				// 百度地图API功能
 				var map = new BMap.Map("allmap");    // 创建Map实例
-				map.centerAndZoom(new BMap.Point(106.655, 26.653), 13);  // 初始化地图,设置中心点坐标和地图级别
+				map.centerAndZoom(new BMap.Point($('#bpointlng').val(), $('#bpointlat').val()), 13);  // 初始化地图,设置中心点坐标和地图级别
 				map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
 				map.setCurrentCity("贵州");          // 设置地图显示的城市 此项是必须设置的
 				map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
 				map.addControl(new BMap.NavigationControl());
+				function showInfo(e){
+					$('#bpointlng').val(e.point.lng);
+					$('#bpointlat').val(e.point.lat);
+				}
+				map.addEventListener("click", showInfo);
 				function translateZuobiao() {
+				    if ($('#pointlng').val() != 0 && $('#pointlat').val() != 0) {
 					var gpsPoint = new BMap.Point($('#pointlng').val(),$('#pointlat').val());
 					//坐标转换完之后的回调函数
 					translateCallback = function (point){
@@ -68,6 +74,7 @@
 						map.setCenter(point);
 					}
 					BMap.Convertor.translate(gpsPoint,0,translateCallback);
+					}
 				}
 			</script>
 		

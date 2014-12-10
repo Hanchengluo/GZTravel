@@ -13,16 +13,16 @@
 			</dd>
 			</dl>
 			<dl>
-				<dt>坐标名称</dt>
+				<dt>区域名称</dt>
 				<dd><input type="text" class="required"  style="width:100%" name="name"/></dd>
 			</dl>
 			<dl>
 				<dt>原始经度</dt>
-				<dd><input type="text" class="required"  style="width:100%" name="pointlng" id="pointlng"/></dd>
+				<dd><input type="text"  style="width:100%" name="pointlng" id="pointlng"/></dd>
 			</dl>
 			<dl>
 				<dt>原始纬度</dt>
-				<dd><input type="text" class="required"  style="width:100%" name="pointlat" id="pointlat"/></dd>
+				<dd><input type="text"  style="width:100%" name="pointlat" id="pointlat"/></dd>
 			</dl>
 			<dl>
 				<dt>百度经度</dt>
@@ -51,6 +51,11 @@
 				map.setCurrentCity("贵州");          // 设置地图显示的城市 此项是必须设置的
 				map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
 				map.addControl(new BMap.NavigationControl());
+				function showInfo(e){
+					$('#bpointlng').val(e.point.lng);
+					$('#bpointlat').val(e.point.lat);
+				}
+				map.addEventListener("click", showInfo);
 				function translateZuobiao() {
 					var gpsPoint = new BMap.Point($('#pointlng').val(),$('#pointlat').val());
 					//坐标转换完之后的回调函数

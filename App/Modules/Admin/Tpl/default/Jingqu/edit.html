@@ -12,23 +12,14 @@
 				<a class="btnLook" href="__URL__/zuobiao" width="650" height="400" rel="zbadd" lookupgroup="orgLookup">坐标选定</a>
 				</dd>
 			</dl>
-			<dl>
+						<dl>
 				<dt>语音介绍：</dt>
 				<dd>
-				<input type="file" style="width:70%" name="videourl"  
-					uploaderOption="{
-					swf:'../Public/dwz/uploadify/scripts/uploadify.swf',
-					uploader:'__URL__/upload/navTabId/jingqu/callbackType/closeCurrent',
-					formData:{PHPSESSID:'xxx', ajax:1},
-					queueID:'fileQueue',
-					buttonImage:'../Public/dwz/uploadify/img/add.jpg',
-					buttonClass:'my-uploadify-button',
-					width:80,
-					auto:false
-					}"
-				/>
+				<input type="hidden"  id="videourl" name="videourl"/>
+				<input id="videourl1" type="text"  readonly="readonly" style="width:70%" name="orgLookup.filedir" value="<{$vo.videourl}>" suggestFields="filedir" lookupGroup="orgLookup"/>
+				<a class="btnLook" href="__URL__/uploadAdd" width="400" height="400" rel="fileadd" lookupgroup="orgLookup"></a>
 				</dd>
-			</dl>
+            </dl>
 			<dl class="nowrap">
 				<dt>景区简介：</dt>
 				<dd>
