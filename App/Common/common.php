@@ -57,6 +57,18 @@ function rubbish($status, $id, $callback=""){
 	return $info;
 }
 
+function newstyperubbish($status, $id, $callback=""){
+	switch ($status) {
+		case 1 :
+			$info = '<a href="__URL__/changeState/id/'.$id.'/islock/1/navTabId/newstyperubbish" target="ajaxTodo" callback="'.$callback.'">恢复显示</a>';
+			break;
+		case 0 :
+			$info = '<a href="__URL__/changeState/id/'.$id.'/islock/0/navTabId/newstype" target="ajaxTodo" callback="'.$callback.'">加入回收站</a>';
+			break;
+	}
+	return $info;
+}
+
 function crubbish($status, $id, $callback=""){
 	switch ($status) {
 		case 1 :
@@ -68,6 +80,7 @@ function crubbish($status, $id, $callback=""){
 	}
 	return $info;
 }
+
 
 
 function imgs($status,$id){

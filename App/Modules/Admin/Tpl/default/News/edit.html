@@ -1,13 +1,30 @@
-
 <div class="pageContent">
 	<form method="post" action="__URL__/update/navTabId/news/callbackType/closeCurrent"  class="pageForm required-validate" 
 		onsubmit="return validateCallback(this,dialogAjaxDone);">
 		<input type="hidden" name="id" value="<{$vo.id}>"/>
 		<div class="pageFormContent" layoutH="60">
+		    <dl>
+				<dt>新闻类型：</dt>
+				<dd>			
+				<select name="nt_id" style="width:100%">
+				<foreach name="aslist" item="volist">
+					<option value="<{$volist.id}>" <if condition="$vo['nt_id'] eq $volist['id']">selected</if>><{$volist.name}></option>
+				</foreach>
+				</select>
+				</dd>
+			</dl>
 			<dl>
 				<dt>新闻标题：</dt>
 				<dd><input type="text" class="required"  style="width:100%" name="title" value="<{$vo.title}>"/></dd>
 			</dl>
+			<dl>
+				<dt>新闻图片：</dt>
+				<dd>
+				<input type="hidden"  id="picurl" name="picurl"/>
+				<input id="picurl1" type="text"  readonly="readonly" style="width:70%" name="orgLookup.filedir" value="<{$vo.picurl}>" suggestFields="filedir" lookupGroup="orgLookup"/>
+				<a class="btnLook" href="__URL__/uploadAdd" width="400" height="400" rel="fileedit" lookupgroup="orgLookup"></a>
+				</dd>
+            </dl>
 			<dl  class="nowrap">
 				<dt>新闻内容：</dt>
 				<dd>
@@ -19,10 +36,14 @@
 				</dd>
 			</dl>
 		</div>
-		
+		<script>
+			   function setValue() {
+					$('#picurl').val($('#picurl1').val());
+				}
+			</script>
 		<div class="formBar">
 			<ul>
-				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">保存</button></div></div></li>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit" onclick="return setValue();">保存</button></div></div></li>
 				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
 			</ul>
 		</div>

@@ -3,9 +3,27 @@
 		onsubmit="return validateCallback(this,dialogAjaxDone);" target="dialog">
 		<div class="pageFormContent" layoutH="60">
 			<dl>
+				<dt>新闻类型：</dt>
+				<dd>			
+				<select name="nt_id" style="width:100%">
+				<foreach name="aslist" item="vo">
+					<option value="<{$vo.id}>" ><{$vo.name}></option>
+				</foreach>
+				</select>
+				</dd>
+			</dl>
+			<dl>
 				<dt>新闻标题：</dt>
 				<dd><input type="text" class="required"  style="width:100%" name="title"/></dd>
 			</dl>
+			<dl>
+				<dt>新闻图片：</dt>
+				<dd>
+				<input type="hidden"  id="picurl" name="picurl"/>
+				<input id="picurl1" type="text"  readonly="readonly" style="width:70%" name="orgLookup.filedir" suggestFields="filedir" lookupGroup="orgLookup"/>
+				<a class="btnLook" href="__URL__/uploadAdd" width="400" height="400" rel="fileadd" lookupgroup="orgLookup"></a>
+				</dd>
+            </dl>
 			<dl  class="nowrap">
 				<dt>新闻内容：</dt>
 				<dd>
@@ -17,10 +35,14 @@
 				</dd>
 			</dl>
 		</div>
-		
+			<script>
+			   function setValue() {
+					$('#picurl').val($('#picurl1').val());
+				}
+			</script>
 		<div class="formBar">
 			<ul>
-				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">保存</button></div></div></li>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit" onclick="return setValue();">保存</button></div></div></li>
 				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
 			</ul>
 		</div>
