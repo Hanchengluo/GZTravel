@@ -1,15 +1,6 @@
 <include file="Public:pagerForm" />
 <script type="text/javascript">
 function ajaxFileUpload(){
-
-	/* $("#loading")
-        .ajaxStart(function(){
-            $(this).show();
-        })
-        .ajaxComplete(function(){
-            $(this).hide();
-        });*/
-
 	$.ajaxFileUpload({
 		url:'__URL__/upload', //处理上传文件的程序文件，见下面的php文件代码
 		secureuri:false,
@@ -36,6 +27,7 @@ function ajaxFileUpload(){
 		<input type="button" id="buttonUpload" value="上传" style="margin-left:100px;" onclick="return ajaxFileUpload();"/>
 		 </dd>
 	</div>
+
 
 </form>
 </div>

@@ -69,6 +69,30 @@ function newstyperubbish($status, $id, $callback=""){
 	return $info;
 }
 
+function xingtyperubbish($status, $id, $callback=""){
+	switch ($status) {
+		case 1 :
+			$info = '<a href="__URL__/changeState/id/'.$id.'/islock/1/navTabId/xingtyperubbish" target="ajaxTodo" callback="'.$callback.'">恢复显示</a>';
+			break;
+		case 0 :
+			$info = '<a href="__URL__/changeState/id/'.$id.'/islock/0/navTabId/xingtype" target="ajaxTodo" callback="'.$callback.'">加入回收站</a>';
+			break;
+	}
+	return $info;
+}
+
+function activityrubbish($status, $id, $callback=""){
+	switch ($status) {
+		case 1 :
+			$info = '<a href="__URL__/changeState/id/'.$id.'/islock/1/navTabId/activityrubbish" target="ajaxTodo" callback="'.$callback.'">恢复显示</a>';
+			break;
+		case 0 :
+			$info = '<a href="__URL__/changeState/id/'.$id.'/islock/0/navTabId/activity" target="ajaxTodo" callback="'.$callback.'">加入回收站</a>';
+			break;
+	}
+	return $info;
+}
+
 function crubbish($status, $id, $callback=""){
 	switch ($status) {
 		case 1 :
@@ -81,7 +105,17 @@ function crubbish($status, $id, $callback=""){
 	return $info;
 }
 
-
+function xingrubbish($status, $id, $callback=""){
+	switch ($status) {
+		case 1 :
+			$info = '<a href="__URL__/changeState/id/'.$id.'/islock/1/navTabId/xingrubbish" target="ajaxTodo" callback="'.$callback.'">恢复显示</a>';
+			break;
+		case 0 :
+			$info = '<a href="__URL__/changeState/id/'.$id.'/islock/0/navTabId/xing" target="ajaxTodo" callback="'.$callback.'">加入回收站</a>';
+			break;
+	}
+	return $info;
+}
 
 function imgs($status,$id){
 	$info1="../Public/../default/Images/test.jpeg";
