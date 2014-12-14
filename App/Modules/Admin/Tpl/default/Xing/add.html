@@ -1,11 +1,11 @@
 <div class="pageContent">
-	<form method="post" action="__URL__/insert/navTabId/news/callbackType/closeCurrent"  
+	<form method="post" action="__URL__/insert/navTabId/xing/callbackType/closeCurrent"  
 		onsubmit="return validateCallback(this,dialogAjaxDone);" target="dialog">
 		<div class="pageFormContent" layoutH="60">
 			<dl>
-				<dt>新闻类型：</dt>
+				<dt>行程类型：</dt>
 				<dd>			
-				<select name="nt_id" style="width:100%">
+				<select name="xt_id" style="width:100%">
 				<foreach name="aslist" item="volist">
 					<option value="<{$volist.id}>" ><{$volist.name}></option>
 				</foreach>
@@ -13,19 +13,19 @@
 				</dd>
 			</dl>
 			<dl>
-				<dt>新闻标题：</dt>
+				<dt>行程标题：</dt>
 				<dd><input type="text" class="required"  style="width:100%" name="title"/></dd>
 			</dl>
 			<dl>
-				<dt>新闻图片：</dt>
+				<dt>行程图片：</dt>
 				<dd>
 				<input type="hidden"  id="picurl" name="picurl"/>
 				<input id="picurl1" type="text"  readonly="readonly" style="width:70%" name="orgLookup.filedir" suggestFields="filedir" lookupGroup="orgLookup"/>
-				<a class="btnLook" href="__URL__/uploadAdd" width="400" height="400" rel="fileadd" lookupgroup="orgLookup"></a>
+				<a class="btnLook" href="__URL__/uploadAdd" width="400" height="400" rel="xingadd" lookupgroup="orgLookup"></a>
 				</dd>
             </dl>
 			<dl  class="nowrap">
-				<dt>新闻内容：</dt>
+				<dt>行程内容：</dt>
 				<dd>
 					<textarea id="elm1" name="comment"  style="width:100%;display: none;" rows="20" >
 					</textarea>

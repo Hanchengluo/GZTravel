@@ -6,7 +6,7 @@
 		<table class="searchContent">
 			<tr>
 				<td>
-					<b>搜索</b> &nbsp; 关键字：<input type="text" name="keyword" value="<{$Think.post.keyword}>" /> [景区名称]
+					<b>搜索</b> &nbsp; 关键字：<input type="text" name="keyword" value="<{$Think.post.keyword}>" /> [景点名称]
 				</td>
 				<td>
 					<div class="buttonActive"><div class="buttonContent"><button type="submit">检索</button></div></div>
@@ -19,9 +19,9 @@
 <div class="pageContent">
 	<div class="panelBar">
 		<ul class="toolBar">
-			<li><a class="add" href="__URL__/add" width="630" height="500"  title="添加景区" target="navTab" rel="jqadd"><span>添加景区</span></a></li>
-			<li><a class="edit" href="__URL__/edit/id/{item_id}"  width="630" height="500" title="修改景区" target="navTab" rel="jqedit"><span>修改景区</span></a></li>
-			<li><a class="delete" href="__URL__/delete/id/{item_id}/navTabId/jingqu" target="ajaxTodo" title="确定要删除吗?"><span>删除</span></a></li>	
+			<li><a class="add" href="__URL__/add" width="630" height="500"  title="添加景点" target="navTab" rel="jdadd"><span>添加景点</span></a></li>
+			<li><a class="edit" href="__URL__/edit/id/{item_id}"  width="630" height="500" title="修改景点" target="navTab" rel="jdedit"><span>修改景点</span></a></li>
+			<li><a class="delete" href="__URL__/delete/id/{item_id}/navTabId/jingdian" target="ajaxTodo" title="确定要删除吗?"><span>删除</span></a></li>	
 			<li class="line">line</li>
 			<li><a class="icon"  href="javascript:navTabPageBreak();"><span>刷新</span></a></li>	
 		</ul>
@@ -30,38 +30,36 @@
 		<thead>
 			<tr align="center">
 				<th width="40">ID</th>
-				<th>景区名称</th>
-				<th>推荐状态</th>
-				<th>地址</th>
-				<th>电话</th>
-				<th>营业开始时间</th>
-				<th>营业结束时间</th>
-				<th>门票</th>
-				<th>平均消费</th>
-				<th>交通</th>
+				<th>景点名称</th>
+				<th>隶属景区</th>
+				<th>景点门票</th>
+				<th>音频地址</th>
+				<th>经度坐标</th>
+				<th>纬度坐标</th>
+				<th>是否推荐</th>
 				<th>状态</th>
 				<th>操作</th>
 			</tr>
 		</thead>
 		<tbody>
 			<foreach name="list" item="vo">
+			    <foreach name="jingqu" item="jingquvo">
+			    <if condition="$vo['jq_id'] eq $jingquvo['id']">
 				<tr target="item_id" rel="<{$vo.id}>"  align="center">
 					<td width="40" align="center"><{$vo.id}></td>
 					<td width="70" align="center"><{$vo.name}></td>
-					<td width="40" align="center"><{$vo.recommend|isok=###}></td>
-					<td width="100" align="center"><{$vo.address}></td>
-					<td width="90" align="center"><{$vo.tel}></td>
-					<td width="90" align="center"><{$vo.starttime}></td>
-					<td width="90" align="center"><{$vo.endtime}></td>
+					<td width="70" align="center"><{$jingquvo.name}></td>
 					<td width="50" align="center"><{$vo.pay}></td>
-					<td width="50" align="center"><{$vo.evgcost}></td>
-					<td width="90" align="center"><{$vo.traffic}></td>
+					<td width="50" align="center"><{$vo.videourl}></td>
+					<td width="50" align="center"><{$vo.pointlng}></td>
+					<td width="50" align="center"><{$vo.pointlat}></td>
+					<td width="40" align="center"><{$vo.recommend|isok=###}></td>
 					<td width="30" align="center"><{$vo.islock|islock=###}></td>
 					<td width="30" align="center">
 
 <script>
 function updateLock(id,num){
-	$.post('__URL__/lock/navTabId/jingqu/callbackType/closeCurrent',{'id':id,'islock':num},function(data){
+	$.post('__URL__/lock/navTabId/jingdian/callbackType/closeCurrent',{'id':id,'islock':num},function(data){
 		if (data) {
 			navTabPageBreak();
 		};	
@@ -77,6 +75,8 @@ function updateLock(id,num){
 						</if>
 					</td>
 				</tr>
+				</if>
+				</foreach>
 			</foreach>
 		</tbody>
 	</table>

@@ -19,21 +19,17 @@
 <div class="pageContent">
 	<div class="panelBar">
 		<ul class="toolBar">
-			<li><a  target="selectedTodo" target="dialog" rel="ids[]" href="__URL__/recAll/navTabId/rubbish" class="add" ><span>批量恢复文章</span></a></li>
+			<li><a  target="selectedTodo" target="dialog" rel="ids[]" href="__URL__/recAll/navTabId/xingtyperubbish" class="add" ><span>批量恢复</span></a></li>
 			<li class="line">line</li>
-			<li><a  target="selectedTodo" target="dialog" rel="ids[]" href="__URL__/delAll/navTabId/rubbish" class="delete" ><span>批量永久删除</span></a></li>
+			<li><a  target="selectedTodo" target="dialog" rel="ids[]" href="__URL__/delAll/navTabId/xingtyperubbish" class="delete" ><span>批量删除</span></a></li>
 		</ul>
 	</div>
 	<table class="table" width="100%" layoutH="112">
 		<thead>
 			<tr>
 			    <th width="10"><input type="checkbox" group="ids[]" class="checkboxCtrl">ID</th>
-				<th width="30">坐标名称</th>
-				<th width="50">原始经度</th>
-				<th width="50">原始纬度</th>
-				<th width="30">百度经度</th>
-				<th width="30">百度纬度</th>
-				<th width="50">操作</th>
+				<th width="30">行程类型名称</th>
+				<th width="30">操作</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -41,11 +37,7 @@
 				<tr target="item_id" rel="<{$vo.id}>">
 				    <td><input name="ids[]" value="<{$vo['id']}>" type="checkbox"><{$vo.id}></td>
 					<td><{$vo.name}></td>
-					<td><{$vo.pointlng}></td>
-					<td><{$vo.pointlat}></td>
-					<td><{$vo.bpointlng}></td>
-					<td><{$vo.bpointlat}></td>
-					<td><{$vo.islock|crubbish=$vo['id']}></td>
+					<td><{$vo.islock|xingtyperubbish=$vo['id']}></td>
 				</tr>
 			</foreach>
 		</tbody>

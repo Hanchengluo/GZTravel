@@ -1,33 +1,34 @@
 <div class="pageContent">
-	<form method="post" action="__URL__/insert/navTabId/news/callbackType/closeCurrent"  
-		onsubmit="return validateCallback(this,dialogAjaxDone);" target="dialog">
+	<form method="post" action="__URL__/update/navTabId/xing/callbackType/closeCurrent"  class="pageForm required-validate" 
+		onsubmit="return validateCallback(this,dialogAjaxDone);">
+		<input type="hidden" name="id" value="<{$vo.id}>"/>
 		<div class="pageFormContent" layoutH="60">
-			<dl>
-				<dt>新闻类型：</dt>
+		    <dl>
+				<dt>行程类型：</dt>
 				<dd>			
-				<select name="nt_id" style="width:100%">
+				<select name="xt_id" style="width:100%">
 				<foreach name="aslist" item="volist">
-					<option value="<{$volist.id}>" ><{$volist.name}></option>
+					<option value="<{$volist.id}>" <if condition="$vo['nt_id'] eq $volist['id']">selected</if>><{$volist.name}></option>
 				</foreach>
 				</select>
 				</dd>
 			</dl>
 			<dl>
-				<dt>新闻标题：</dt>
-				<dd><input type="text" class="required"  style="width:100%" name="title"/></dd>
+				<dt>行程标题：</dt>
+				<dd><input type="text" class="required"  style="width:100%" name="title" value="<{$vo.title}>"/></dd>
 			</dl>
 			<dl>
-				<dt>新闻图片：</dt>
+				<dt>行程图片：</dt>
 				<dd>
 				<input type="hidden"  id="picurl" name="picurl"/>
-				<input id="picurl1" type="text"  readonly="readonly" style="width:70%" name="orgLookup.filedir" suggestFields="filedir" lookupGroup="orgLookup"/>
-				<a class="btnLook" href="__URL__/uploadAdd" width="400" height="400" rel="fileadd" lookupgroup="orgLookup"></a>
+				<input id="picurl1" type="text"  readonly="readonly" style="width:70%" name="orgLookup.filedir" value="<{$vo.picurl}>" suggestFields="filedir" lookupGroup="orgLookup"/>
+				<a class="btnLook" href="__URL__/uploadAdd" width="400" height="400" rel="fileedit" lookupgroup="orgLookup"></a>
 				</dd>
             </dl>
 			<dl  class="nowrap">
-				<dt>新闻内容：</dt>
+				<dt>行程内容：</dt>
 				<dd>
-					<textarea id="elm1" name="comment"  style="width:100%;display: none;" rows="20" >
+					<textarea id="elm1" name="comment"  style="width:100%;display: none;" rows="20" ><{$vo.comment}>
 					</textarea>
 					<script>
 						$('#elm1').xheditor({upLinkUrl:"__URL__/upload",upLinkExt:"zip,rar,txt",upImgUrl:"__URL__/upload",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"__URL__/upload",upFlashExt:"swf",upMediaUrl:"__URL__/upload",upMediaExt:"avi",urlBase:'__ROOT__/'});
@@ -35,7 +36,7 @@
 				</dd>
 			</dl>
 		</div>
-			<script>
+		<script>
 			   function setValue() {
 					$('#picurl').val($('#picurl1').val());
 				}

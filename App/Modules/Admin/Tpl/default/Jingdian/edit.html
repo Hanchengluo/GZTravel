@@ -1,11 +1,21 @@
 
 <div class="pageContent">
-	<form method="post" action="__URL__/update/navTabId/jingqu/callbackType/closeCurrent"  class="pageForm required-validate" 
+	<form method="post" action="__URL__/update/navTabId/jingdian/callbackType/closeCurrent"  class="pageForm required-validate" 
 		onsubmit="return validateCallback(this,navTabAjaxDone);">
 		<input type="hidden" name="id" value="<{$vo.id}>"/>
 		<div class="pageFormContent" layoutH="60">
 			<dl>
-				<dt>景区名：</dt>
+				<dt>隶属景区：</dt>
+				<dd>			
+				<select name="jq_id" style="width:100%">
+				<foreach name="jqlist" item="volist">
+					<option value="<{$volist.id}>" <if condition="$vo['jq_id'] eq $volist['id']">selected</if>><{$volist.name}></option>
+				</foreach>
+				</select>
+				</dd>
+			</dl>
+			<dl>
+				<dt>景点名：</dt>
 				<dd>
 				<input type="hidden"  id="name" name="name"/>
 				<input id="name1" type="text" class="required"  style="width:70%" name="orgLookup.orgName" value="<{$vo.name}>" suggestFields="orgName" lookupGroup="orgLookup" />
@@ -21,13 +31,13 @@
 				</dd>
             </dl>
 			<dl class="nowrap">
-				<dt>景区简介：</dt>
+				<dt>景点简介：</dt>
 				<dd>
 				<textarea class="required textInput valid" style="width:95%" name="title"><{$vo.title}></textarea>
 				</dd>
 			</dl>
 			<dl  class="nowrap">
-				<dt>景区描述：</dt>
+				<dt>景点描述：</dt>
 				<dd>
 					<textarea id="elm2"  name="comment"  style="width:100%;display: none;" rows="13" ><{$vo.comment}>
 					</textarea>
@@ -45,45 +55,6 @@
 			<dl>
 				<dt>门票价格：</dt>
 				<dd><input type="text" class="required"  style="width:70%" name="pay" value="<{$vo.pay}>"/>&nbsp &nbsp 元</dd>
-			</dl>
-			<dl>
-				<dt>开始时间：</dt>
-				<dd><input id="timepicker1" type="text" class="required"  style="width:70%" name="starttime" value="<{$vo.starttime}>"/></dd>
-			</dl>
-			<dl>
-				<dt>结束时间：</dt>
-				<dd><input id="timepicker2" type="text" class="required"  style="width:70%" name="endtime" value="<{$vo.endtime}>"/></dd>
-			</dl>
-			<script>
-				$('#timepicker1').datetimepicker({
-					datepicker:false,
-					format:'H:i:00',
-					step:30
-				});
-				$('#timepicker2').datetimepicker({
-					datepicker:false,
-					format:'H:i:00',
-					step:30
-				});
-			</script>
-			<dl>
-				<dt>人均消费：</dt>
-				<dd><input type="text" class="required"  style="width:70%" name="evgcost" value="<{$vo.evgcost}>"/>&nbsp &nbsp元</dd>
-			</dl>
-
-			<dl>
-				<dt>交通信息：</dt>
-				<dd><input type="text" class="required"  style="width:70%" name="traffic" value="<{$vo.traffic}>"/></dd>
-			</dl>
-			<dl>
-				<dt>地址信息：</dt>
-				<dd>
-				<input type="text" class="required"  style="width:70%" name="address" value="<{$vo.address}>"/>
-				</dd>
-			</dl>
-			<dl>
-				<dt>联系方式：</dt>
-				<dd><input type="text" class="required"  style="width:70%" name="tel" value="<{$vo.tel}>"/></dd>
 			</dl>
 			<dl>
 				<dt>经度坐标：</dt>

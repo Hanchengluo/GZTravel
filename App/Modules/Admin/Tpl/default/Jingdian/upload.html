@@ -1,0 +1,31 @@
+<include file="Public:pagerForm" />
+<script type="text/javascript">
+function ajaxFileUpload(){
+	$.ajaxFileUpload({
+		url:'__URL__/upload', //处理上传文件的程序文件，见下面的php文件代码
+		secureuri:false,
+		fileElementId:'pic',
+		dataType:'json',
+		success:function(data){
+			if(data.code == 0){
+			    alertMsg.correct(data.message);
+			    $.bringBack({ filedir:data.file_url});
+			} else{
+			    alertMsg.error(data.message); 
+			}
+		}
+	});
+	return false;
+}
+</script>
+<div class="pageContent">
+<form method="post" enctype="multipart/form-data"  class="pageForm required-validate" 
+		onsubmit="return validateCallback(this,dialogAjaxDone);">
+	<div class="pageFormContent" layoutH="60">
+		<dt><input id="pic" type="file" size="20" name="pic" class="input"></dt>
+		 <dd>
+		<input type="button" id="buttonUpload" value="上传" style="margin-left:100px;" onclick="return ajaxFileUpload();"/>
+		 </dd>
+	</div>
+</form>
+</div>

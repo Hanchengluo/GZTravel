@@ -1,7 +1,7 @@
 <include file="Public:pagerForm" />
 <div class="pageHeader">
 	<form rel="pagerForm" onsubmit="return navTabSearch(this);" method="post">
-	<input type="hidden" name="numPerPage" value="<{$numPerPage}>" /><!--每页显示多少条-->
+	<input type="hidden" name="numPerPage" value="<{$numPerPage}>" />
 	<div class="searchBar">
 		<table class="searchContent">
 			<tr>
@@ -19,33 +19,31 @@
 <div class="pageContent">
 	<div class="panelBar">
 		<ul class="toolBar">
-			<li><a  target="selectedTodo" target="dialog" rel="ids[]" href="__URL__/recAll/navTabId/rubbish" class="add" ><span>批量恢复文章</span></a></li>
+			<li><a class="add" href="__URL__/add" target="dialog" width="630" height="500" rel="xingadd" title="添加"><span>添加</span></a></li>
+			<li><a class="edit" href="__URL__/edit/id/{item_id}"  width="630" height="500" target="dialog" rel="xingedit"><span>修改</span></a></li>
+			<li><a  target="selectedTodo" target="dialog" rel="ids[]" href="__URL__/rubAll" class="delete" ><span>批量放入回收站</span></a></li>	
 			<li class="line">line</li>
-			<li><a  target="selectedTodo" target="dialog" rel="ids[]" href="__URL__/delAll/navTabId/rubbish" class="delete" ><span>批量永久删除</span></a></li>
+			<li><a class="icon"  href="javascript:navTabPageBreak();"><span>刷新</span></a></li>	
 		</ul>
 	</div>
 	<table class="table" width="100%" layoutH="112">
 		<thead>
 			<tr>
 			    <th width="10"><input type="checkbox" group="ids[]" class="checkboxCtrl">ID</th>
-				<th width="30">坐标名称</th>
-				<th width="50">原始经度</th>
-				<th width="50">原始纬度</th>
-				<th width="30">百度经度</th>
-				<th width="30">百度纬度</th>
-				<th width="50">操作</th>
+				<th width="30">行程标题</th>
+				<th width="40">发布时间</th>
+				<th width="40">发布者</th>
+				<th width="30">操作</th>
 			</tr>
 		</thead>
 		<tbody>
 			<foreach name="list" item="vo">
 				<tr target="item_id" rel="<{$vo.id}>">
 				    <td><input name="ids[]" value="<{$vo['id']}>" type="checkbox"><{$vo.id}></td>
-					<td><{$vo.name}></td>
-					<td><{$vo.pointlng}></td>
-					<td><{$vo.pointlat}></td>
-					<td><{$vo.bpointlng}></td>
-					<td><{$vo.bpointlat}></td>
-					<td><{$vo.islock|crubbish=$vo['id']}></td>
+					<td><{$vo.title}></td>
+					<td><{$vo.updatetime|date="Y-m-d H:m:s",###}></td>
+					<td><{$vo.username}></td>
+					<td><{$vo.islock|xingrubbish=$vo['id']}></td>
 				</tr>
 			</foreach>
 		</tbody>

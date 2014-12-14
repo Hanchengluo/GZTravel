@@ -1,0 +1,15 @@
+@CHARSET "UTF-8";
+.addrmap{
+   position:absolute;
+   width: 400px;
+}
+.addrmaptitle{
+   background-color: #6795B4;
+   text-align: right;
+}
+.inputaddrmap {
+  width: 400px;
+  height: 300px;
+  overflow: hidden;
+  margin:0;
+}
