@@ -3,15 +3,15 @@
  * 后台新闻类
  * @author   <[c@easycms.cc]>
  */
-class NewsAction extends CommonAction{
+class ZuobiaoAction extends CommonAction{
 	public function index() {
 		//列表过滤器，生成查询Map对象
-		$map = $this->_search('news');
+		$map = $this->_search('Zuobiao');
 		if(method_exists($this, '_filter')) {
 			$this->_filter($map);
 		}
 		$map['islock']=0;
-		$model = M('news');
+		$model = M('Zuobiao');
 		if (!empty($model)) {
 			$this->_list($model, $map);
 		}
@@ -19,14 +19,15 @@ class NewsAction extends CommonAction{
 		return;
 	}
 	
+	
 	public function rubbish() {
 		//列表过滤器，生成查询Map对象
-		$map = $this->_search('news');
+		$map = $this->_search('Zuobiao');
 		if(method_exists($this, '_filter')) {
 			$this->_filter($map);
 		}
 		$map['islock']=1;
-		$model = M('news');
+		$model = M('Zuobiao');
 		if (!empty($model)) {
 			$this->_list($model, $map);
 		}
@@ -38,35 +39,35 @@ class NewsAction extends CommonAction{
 	public function _filter(&$map){
 		//判断是否有搜索条件
 		if(!empty($_REQUEST['keyword'])){
-			$map['title']=array("like","%{$_REQUEST['keyword']}%");
+			$map['name']=array("like","%{$_REQUEST['keyword']}%");
 		}
 	}	
 	
 	public function add(){
-		$m=M('Newstype');
-		$data['islock']=0;
+		$m=M('Areaservice');
+		$data['level']=2;
+		$data['is_lock']=0;
 		$aslist=$m->where($data)->select();
 		$this->assign('aslist',$aslist);
 		$this->display(add);
-		return;
 	}
 	
 	public function insert(){
-		$model = M('News');
-		$news=array(
-				'title'=>I('title'),
-				'comment'=>I('comment'),
-				'nt_id'=>I('nt_id'),
-				'picurl'=>I('picurl'),
-				'username'=>$_SESSION[C('ADMIN_AUTH_KEY_B')],
-				'updatetime'=>time()
+		$model = M('Zuobiao');
+		$Zuobiao=array(
+				'name'=>I('name'),
+				'pointlng'=>I('pointlng'),
+				'pointlat'=>I('pointlat'),
+				'bpointlng'=>I('bpointlng'),
+				'bpointlat'=>I('bpointlat'),
+				'as_id'=>I('as_id')
 			);
 		
 		if (false === $model->create()) {
 			$this->error($model->getError());
 		}
 		//保存当前数据对象
-		if ($result = $model->add($news)){ //保存成功
+		if ($result = $model->add($Zuobiao)){ //保存成功
 			// 回调接口
 			if (method_exists($this, '_tigger_insert')) {
 				$model->id = $result;
@@ -84,12 +85,12 @@ class NewsAction extends CommonAction{
 	}
 	
 	public function edit() {
-		$model = M('News');
+		$model = M('Zuobiao');
 		$id = $_REQUEST[$model->getPk()];
 		$vo = $model->find($id);
 		$this->assign('vo', $vo);
-		$m=M('Newstype');
-		$data['islock']=0;
+		$m=M('Areaservice');
+		$data['level']=2;
 		$aslist=$m->where($data)->select();
 		$this->assign('aslist',$aslist);
 		$this->display(edit);
@@ -97,16 +98,17 @@ class NewsAction extends CommonAction{
 	
 
 	public function update() {
-		$model = M('News');
+		$model = M('Zuobiao');
 		if(false === $model->create()) {
 			$this->error($model->getError());
 		}
 	    $data['id'] = I('id');
-		$data['title'] = I('title');
-		$data['comment'] = I('comment');
-		$data['nt_id'] = I('nt_id');
-		$data['picurl'] = I('picurl');
-		$data['updatetime'] = time();
+		$data['name'] = I('name');
+		$data['pointlng'] = I('pointlng');
+		$data['pointlat'] = I('pointlat');
+		$data['bpointlng'] = I('bpointlng');
+		$data['bpointlat'] = I('bpointlat');
+		$data['as_id'] = I('as_id');
 		// 更新数据
 		if(false !== $model->save($data)) {
 			// 回调接口
@@ -120,33 +122,9 @@ class NewsAction extends CommonAction{
 			$this->error(L('更新失败'));
 		}
 	}
-
-	public function uploadAdd() {
-		$this->display('upload');
-	}
-	
-	public function upload(){
-		//设置上传目录		
-		$upFilePath="./Uploads/News/picture/";
-		$file_name = $_FILES['pic']['name'];
-		$file_tmp_name = $_FILES['pic']['tmp_name'];
-		if(!is_dir($upFilePath)){
-			mkdir($upFilePath,0777,true);
-		}
-		$info = pathinfo($file_name);
-        $extend = $info['extension'];
-		$fileName = date("YmdHis").rand(100,999).'.'.$extend;
-		$file=@move_uploaded_file($file_tmp_name,$upFilePath.$fileName);  
-
-		if($file === FALSE){
-			echo json_encode(array('code'=>'1','message'=>'上传失败','file_url'=>$upFilePath.$fileName));
-		}else{
-			echo json_encode(array('code'=>'0','message'=>'上传成功','file_url'=>$upFilePath.$fileName));
-		}
-	}
 	
    public function rubAll(){
-    	$name='News';
+    	$name='Zuobiao';
 		$model = M($name);
     	$pk=$model->getPk ();  
 		$data[$pk]=array('in', $_POST['ids']);
@@ -156,7 +134,7 @@ class NewsAction extends CommonAction{
 	}
 
 	public function delAll(){
-    	$name='News';
+    	$name='Zuobiao';
 		$model = M($name);
     	$pk=$model->getPk ();  
 		$data[$pk]=array('in', $_POST['ids']);
@@ -165,7 +143,7 @@ class NewsAction extends CommonAction{
 	}
 
    public function recAll(){
-    	$name='News';
+    	$name='Zuobiao';
 		$model = M($name);
     	$pk=$model->getPk ();  
 		$data[$pk]=array('in', $_POST['ids']);
@@ -175,7 +153,7 @@ class NewsAction extends CommonAction{
 	}
 
 	public function changeState() {
-		$model = M("News"); // 实例化对象
+		$model = M("Zuobiao"); // 实例化对象
 		$pk = $model->getPk();
 		$condition[$pk]=$_REQUEST[$pk];
 		// 要修改的数据对象属性赋值
@@ -189,7 +167,7 @@ class NewsAction extends CommonAction{
 			$this->error(L('更新失败'));
 		}
 	}
-	
+
 	/**
 	 * 根据表单生成查询条件
 	 * 进行列表过滤
@@ -201,7 +179,7 @@ class NewsAction extends CommonAction{
 		if (empty($name)) {
 			$name = $this->getActionName();
 		}
-		$model = D('News');
+		$model = D('Zuobiao');
 		$map = array();
 	    foreach ($model->getDbFields() as $key => $val) {
 		 	if (substr($key, 0, 1) == '_')

@@ -1,17 +1,17 @@
 <?php
 /**
- * 后台新闻类
+ * 后台行程类
  * @author   <[c@easycms.cc]>
  */
-class NewsAction extends CommonAction{
+class XingAction extends CommonAction{
 	public function index() {
 		//列表过滤器，生成查询Map对象
-		$map = $this->_search('news');
+		$map = $this->_search('Xing');
 		if(method_exists($this, '_filter')) {
 			$this->_filter($map);
 		}
 		$map['islock']=0;
-		$model = M('news');
+		$model = M('Xing');
 		if (!empty($model)) {
 			$this->_list($model, $map);
 		}
@@ -21,12 +21,12 @@ class NewsAction extends CommonAction{
 	
 	public function rubbish() {
 		//列表过滤器，生成查询Map对象
-		$map = $this->_search('news');
+		$map = $this->_search('Xing');
 		if(method_exists($this, '_filter')) {
 			$this->_filter($map);
 		}
 		$map['islock']=1;
-		$model = M('news');
+		$model = M('Xing');
 		if (!empty($model)) {
 			$this->_list($model, $map);
 		}
@@ -43,7 +43,7 @@ class NewsAction extends CommonAction{
 	}	
 	
 	public function add(){
-		$m=M('Newstype');
+		$m=M('Xingtype');
 		$data['islock']=0;
 		$aslist=$m->where($data)->select();
 		$this->assign('aslist',$aslist);
@@ -52,11 +52,11 @@ class NewsAction extends CommonAction{
 	}
 	
 	public function insert(){
-		$model = M('News');
-		$news=array(
+		$model = M('Xing');
+		$Xing=array(
 				'title'=>I('title'),
 				'comment'=>I('comment'),
-				'nt_id'=>I('nt_id'),
+				'xt_id'=>I('xt_id'),
 				'picurl'=>I('picurl'),
 				'username'=>$_SESSION[C('ADMIN_AUTH_KEY_B')],
 				'updatetime'=>time()
@@ -66,7 +66,7 @@ class NewsAction extends CommonAction{
 			$this->error($model->getError());
 		}
 		//保存当前数据对象
-		if ($result = $model->add($news)){ //保存成功
+		if ($result = $model->add($Xing)){ //保存成功
 			// 回调接口
 			if (method_exists($this, '_tigger_insert')) {
 				$model->id = $result;
@@ -84,11 +84,11 @@ class NewsAction extends CommonAction{
 	}
 	
 	public function edit() {
-		$model = M('News');
+		$model = M('Xing');
 		$id = $_REQUEST[$model->getPk()];
 		$vo = $model->find($id);
 		$this->assign('vo', $vo);
-		$m=M('Newstype');
+		$m=M('Xingtype');
 		$data['islock']=0;
 		$aslist=$m->where($data)->select();
 		$this->assign('aslist',$aslist);
@@ -97,14 +97,14 @@ class NewsAction extends CommonAction{
 	
 
 	public function update() {
-		$model = M('News');
+		$model = M('Xing');
 		if(false === $model->create()) {
 			$this->error($model->getError());
 		}
 	    $data['id'] = I('id');
 		$data['title'] = I('title');
 		$data['comment'] = I('comment');
-		$data['nt_id'] = I('nt_id');
+		$data['xt_id'] = I('xt_id');
 		$data['picurl'] = I('picurl');
 		$data['updatetime'] = time();
 		// 更新数据
@@ -127,7 +127,7 @@ class NewsAction extends CommonAction{
 	
 	public function upload(){
 		//设置上传目录		
-		$upFilePath="./Uploads/News/picture/";
+		$upFilePath="./Uploads/Xing/picture/";
 		$file_name = $_FILES['pic']['name'];
 		$file_tmp_name = $_FILES['pic']['tmp_name'];
 		if(!is_dir($upFilePath)){
@@ -146,7 +146,7 @@ class NewsAction extends CommonAction{
 	}
 	
    public function rubAll(){
-    	$name='News';
+    	$name='Xing';
 		$model = M($name);
     	$pk=$model->getPk ();  
 		$data[$pk]=array('in', $_POST['ids']);
@@ -156,7 +156,7 @@ class NewsAction extends CommonAction{
 	}
 
 	public function delAll(){
-    	$name='News';
+    	$name='Xing';
 		$model = M($name);
     	$pk=$model->getPk ();  
 		$data[$pk]=array('in', $_POST['ids']);
@@ -165,7 +165,7 @@ class NewsAction extends CommonAction{
 	}
 
    public function recAll(){
-    	$name='News';
+    	$name='Xing';
 		$model = M($name);
     	$pk=$model->getPk ();  
 		$data[$pk]=array('in', $_POST['ids']);
@@ -175,7 +175,7 @@ class NewsAction extends CommonAction{
 	}
 
 	public function changeState() {
-		$model = M("News"); // 实例化对象
+		$model = M("Xing"); // 实例化对象
 		$pk = $model->getPk();
 		$condition[$pk]=$_REQUEST[$pk];
 		// 要修改的数据对象属性赋值
@@ -201,7 +201,7 @@ class NewsAction extends CommonAction{
 		if (empty($name)) {
 			$name = $this->getActionName();
 		}
-		$model = D('News');
+		$model = D('Xing');
 		$map = array();
 	    foreach ($model->getDbFields() as $key => $val) {
 		 	if (substr($key, 0, 1) == '_')
