@@ -1,0 +1,91 @@
+<include file="Public:pagerForm" />
+<div class="pageHeader">
+	<form rel="pagerForm" onsubmit="return navTabSearch(this);" method="post">
+	<input type="hidden" name="numPerPage" value="<{$numPerPage}>" />
+	<div class="searchBar">
+		<table class="searchContent">
+			<tr>
+				<td>
+					<b>搜索</b> &nbsp; 关键字：<input type="text" name="keyword" value="<{$Think.post.keyword}>" /> [美食名称]
+				</td>
+				<td>
+					<div class="buttonActive"><div class="buttonContent"><button type="submit">检索</button></div></div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	</form>
+</div>
+<div class="pageContent">
+	<div class="panelBar">
+		<ul class="toolBar">
+			<li><a class="add" href="__URL__/add" width="630" height="500"  title="添加美食" target="navTab" rel="msadd"><span>添加美食</span></a></li>
+			<li><a class="edit" href="__URL__/edit/id/{item_id}"  width="630" height="500" title="修改美食" target="navTab" rel="msedit"><span>修改美食</span></a></li>
+			<li><a class="delete" href="__URL__/delete/id/{item_id}/navTabId/meishi" target="ajaxTodo" title="确定要删除吗?"><span>删除</span></a></li>	
+			<li class="line">line</li>
+			<li><a class="icon"  href="javascript:navTabPageBreak();"><span>刷新</span></a></li>	
+		</ul>
+	</div>
+	<table class="table" width="100%" layoutH="112">
+		<thead>
+			<tr align="center">
+				<th width="40">ID</th>
+				<th>美食名称</th>
+				<th>隶属吃地</th>
+				<th>音频地址</th>
+				<th>是否推荐</th>
+				<th>状态</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<foreach name="list" item="vo">
+			    <foreach name="chilist" item="chivo">
+			    <if condition="$vo['chi_id'] eq $chivo['id']">
+				<tr target="item_id" rel="<{$vo.id}>"  align="center">
+					<td width="40" align="center"><{$vo.id}></td>
+					<td width="70" align="center"><{$vo.name}></td>
+					<td width="70" align="center"><{$chivo.name}></td>
+					<td width="50" align="center"><{$vo.videourl}></td>
+					<td width="40" align="center"><{$vo.recommend|isok=###}></td>
+					<td width="30" align="center"><{$vo.islock|islock=###}></td>
+					<td width="30" align="center">
+
+<script>
+function updateLock(id,num){
+	$.post('__URL__/lock/navTabId/meishi/callbackType/closeCurrent',{'id':id,'islock':num},function(data){
+		if (data) {
+			navTabPageBreak();
+		};	
+	});	
+}
+</script>
+						<if condition="$vo.islock eq 1">
+								<a href="javascript:void(0);" onclick="updateLock(<{$vo.id}>,0);">解锁</a>
+						<else/>
+							<if condition="$vo['username']==admin">无法锁定<else/>
+								<a href="javascript:void(0);" onclick="updateLock(<{$vo.id}>,1);">锁定</a>
+							</if>
+						</if>
+					</td>
+				</tr>
+				</if>
+				</foreach>
+			</foreach>
+		</tbody>
+	</table>
+	<div class="panelBar">
+		<div class="pages">
+			<span>显示</span>
+			<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+				<option value="10" <if condition="$numPerPage eq 10 ">selected</if>>10</option>
+				<option value="15" <if condition="$numPerPage eq 15 ">selected</if>>15</option>
+				<option value="20" <if condition="$numPerPage eq 20 ">selected</if>>20</option>
+				<option value="25" <if condition="$numPerPage eq 25 ">selected</if>>25</option>
+				<option value="30" <if condition="$numPerPage eq 30 ">selected</if>>30</option>
+			</select>
+			<span>共<{$totalCount}>条</span>
+		</div>
+		<div class="pagination" targetType="navTab" totalCount="<{$totalCount}>" numPerPage="<{$numPerPage}>" pageNumShown="10" currentPage="<{$currentPage}>"></div>
+	</div>
+</div>

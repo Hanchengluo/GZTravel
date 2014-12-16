@@ -1,21 +1,25 @@
 <?php 
 /**
-* 景区类
+* 美食类
 * @author  <[s@easycms.cc]>
 */
-class ChiAction extends CommonAction
+class MeishiAction extends CommonAction
 {
 		public function index() {
 		//列表过滤器，生成查询Map对象
-		$map = $this->_search('Chi');
+		$map = $this->_search('Meishi');
 		if(method_exists($this, '_filter')) {
 			$this->_filter($map);
 		}
-		$model = M('Chi');
+		$model = M('Meishi');
 		//$map['islock'] = 0;
 		if (!empty($model)) {
 			$this->_list($model, $map);
 		}
+		$model1 = M('Chi');
+		$data['islock'] = 0;
+		$chilist = $model1->where($data)->select();
+		$this->assign('chilist', $chilist);
 		$this->display();
 		return;
 	}
@@ -42,38 +46,16 @@ class ChiAction extends CommonAction
 	}	
 	
 	public function add() {
-		$model1 = M('Jingqu');
+		$model1 = M('Chi');
 		$data['islock'] = 0;
-		$jqlist = $model1->where($data)->select();
-		$this->assign('jqlist', $jqlist);
-		$model2 = M('Areaservice');
-		$data['name'] = '吃';
-		$chiid = $model2->where($data)->getField('id');
-		$map['pid'] = $chiid;
-		$map['islock'] = '0';
-		$aslist = $model2->where($map)->select();
-		$this->assign('aslist', $aslist);
+		$chilist = $model1->where($data)->select();
+		$this->assign('chilist', $chilist);
 		$this->display('add');
 	}
 	
 	
-	public function zuobiao() {
-		$model1 = M('Areaservice');
-		$data['name'] = '吃';
-		$id = $model1->where($data)->getField('id');
-		$data1['pid'] = $id;
-		$ids = $model1->where($data1)->getField('id',true);
-		$model = M('Zuobiao');
-		$map['islock'] = 0;
-		$map['as_id'] = array ('in',$ids);
-		if (!empty($model)) {
-			$this->_list($model, $map);
-		}
-		$this->display(zuobiao);
-	}
-	
 	public function insert(){
-		$model = D('Chi');
+		$model = D('Meishi');
 		unset ( $_POST [$model->getPk()] );
 		
 		if (false === $model->create()) {
@@ -96,26 +78,19 @@ class ChiAction extends CommonAction
 	}
 	
 	public function edit() {
-		$model = M('Chi');
+		$model = M('Meishi');
 		$id = $_REQUEST[$model->getPk()];
 		$vo = $model->find($id);
 		$this->assign('vo', $vo);
-		$model1 = M('Jingqu');
+		$model1 = M('Chi');
 		$data['islock'] = 0;
-		$jqlist = $model1->where($data)->select();
-		$this->assign('jqlist', $jqlist);
-		$model2 = M('Areaservice');
-		$data['name'] = '吃';
-		$chiid = $model2->where($data)->getField('id');
-		$map['pid'] = $chiid;
-		$map['islock'] = '0';
-		$aslist = $model2->where($map)->select();
-		$this->assign('aslist', $aslist);
+		$chilist = $model1->where($data)->select();
+		$this->assign('chilist', $chilist);
 		$this->display('edit');
 	}
 	
 	public function update() {
-		$model = D('Chi');		
+		$model = D('Meishi');		
 		if(false === $model->create()) {
 			$this->error($model->getError());
 		}
@@ -135,7 +110,7 @@ class ChiAction extends CommonAction
 	
 	public function delete() {
 		//删除指定记录
-		$model = M('Chi');
+		$model = M('Meishi');
 		if (!empty($model)) {
 			$pk = $model->getPk();
 			$id = $_REQUEST[$pk];
@@ -153,7 +128,7 @@ class ChiAction extends CommonAction
 	}
 	
 	public function lock(){
-		$model = M('Chi');
+		$model = M('Meishi');
 		$data['id']=(I('id'));
 		$data['islock']=I('islock');
 
@@ -180,7 +155,7 @@ class ChiAction extends CommonAction
 
 	public function upload(){
 		//设置上传目录		
-		$upFilePath="./Uploads/Chi/video/";
+		$upFilePath="./Uploads/Meishi/video/";
 		$file_name = $_FILES['pic']['name'];
 		$file_tmp_name = $_FILES['pic']['tmp_name'];
 		if(!is_dir($upFilePath)){

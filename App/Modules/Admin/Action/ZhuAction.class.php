@@ -1,6 +1,6 @@
 <?php 
 /**
-* 景区类
+* 住地类
 * @author  <[s@easycms.cc]>
 */
 class ZhuAction extends CommonAction
@@ -12,11 +12,26 @@ class ZhuAction extends CommonAction
 			$this->_filter($map);
 		}
 		$model = M('Zhu');
+		//$map['islock'] = 0;
 		if (!empty($model)) {
 			$this->_list($model, $map);
 		}
 		$this->display();
 		return;
+	}
+
+	public function search() {
+		//列表过滤器，生成查询Map对象
+		$map = $this->_search('Zuobiao');
+		if(method_exists($this, '_filter')) {
+			$this->_filter($map);
+		}
+		$model = M('Zuobiao');
+		$map['islock'] = 0;
+		if (!empty($model)) {
+			$this->_list($model, $map);
+		}
+		$this->display(zuobiao);
 	}
 
 	//添加搜索方法
@@ -28,15 +43,38 @@ class ZhuAction extends CommonAction
 	}	
 	
 	public function add() {
+		$model1 = M('Jingqu');
+		$data['islock'] = 0;
+		$jqlist = $model1->where($data)->select();
+		$this->assign('jqlist', $jqlist);
+		$model2 = M('Areaservice');
+		$data['name'] = '住';
+		$zhuid = $model2->where($data)->getField('id');
+		$map['pid'] = $zhuid;
+		$map['islock'] = '0';
+		$aslist = $model2->where($map)->select();
+		$this->assign('aslist', $aslist);
 		$this->display('add');
 	}
 	
-	public function test() {
-		$this->display('test');
+	
+	public function zuobiao() {
+		$model1 = M('Areaservice');
+		$data['name'] = '住';
+		$id = $model1->where($data)->getField('id');
+		$data1['pid'] = $id;
+		$ids = $model1->where($data1)->getField('id',true);
+		$model = M('Zuobiao');
+		$map['islock'] = 0;
+		$map['as_id'] = array ('in',$ids);
+		if (!empty($model)) {
+			$this->_list($model, $map);
+		}
+		$this->display(zuobiao);
 	}
 	
 	public function insert(){
-		$model = D('category');
+		$model = D('Zhu');
 		unset ( $_POST [$model->getPk()] );
 		
 		if (false === $model->create()) {
@@ -59,15 +97,26 @@ class ZhuAction extends CommonAction
 	}
 	
 	public function edit() {
-		$model = M('category');
+		$model = M('Zhu');
 		$id = $_REQUEST[$model->getPk()];
 		$vo = $model->find($id);
 		$this->assign('vo', $vo);
+		$model1 = M('Jingqu');
+		$data['islock'] = 0;
+		$jqlist = $model1->where($data)->select();
+		$this->assign('jqlist', $jqlist);
+		$model2 = M('Areaservice');
+		$data['name'] = '住';
+		$Zhuid = $model2->where($data)->getField('id');
+		$map['pid'] = $Zhuid;
+		$map['islock'] = '0';
+		$aslist = $model2->where($map)->select();
+		$this->assign('aslist', $aslist);
 		$this->display('edit');
 	}
 	
 	public function update() {
-		$model = D('category');		
+		$model = D('Zhu');		
 		if(false === $model->create()) {
 			$this->error($model->getError());
 		}
@@ -125,23 +174,28 @@ class ZhuAction extends CommonAction
 			$this->error(L('更新失败'));
 		}
 	}
-	//删除状态
-	public function delete_tag(){
-		//删除指定记录
-		$model = M('category');
-		if (!empty($model)) {
-			$pk = $model->getPk();
-			$id = $_REQUEST[$pk];
-			if (isset($id)) {	
-				$condition = array($pk => array('in', explode(',', $id)));
-				if (false !== $model->where($condition)->setField('is_delete',1)) {
-					$this->success(L('删除成功'));
-				} else {
-					$this->error(L('删除失败'));
-				}
-			} else {
-				$this->error('非法操作');
-			}
+	
+	public function uploadAdd() {
+		$this->display('upload');
+	}
+
+	public function upload(){
+		//设置上传目录		
+		$upFilePath="./Uploads/Zhu/video/";
+		$file_name = $_FILES['pic']['name'];
+		$file_tmp_name = $_FILES['pic']['tmp_name'];
+		if(!is_dir($upFilePath)){
+			mkdir($upFilePath,0777,true);
+		}
+		$info = pathinfo($file_name);
+        $extend = $info['extension'];
+		$fileName = date("YmdHis").rand(100,999).'.'.$extend;
+		$file=@move_uploaded_file($file_tmp_name,$upFilePath.$fileName);  
+
+		if($file === FALSE){
+			echo json_encode(array('code'=>'1','message'=>'上传失败','file_url'=>$upFilePath.$fileName));
+		}else{
+			echo json_encode(array('code'=>'0','message'=>'上传成功','file_url'=>$upFilePath.$fileName));
 		}
 	}
 	
@@ -158,6 +212,7 @@ class ZhuAction extends CommonAction
 		}
 		$model = M($name);
 		$map = array();
+		//$map['islock'] = 0;
 		foreach ($model->getDbFields() as $key => $val) {
 			if (substr($key, 0, 1) == '_')
 				continue;
@@ -165,6 +220,7 @@ class ZhuAction extends CommonAction
 				$map[$val] = $_REQUEST[$val];
 			}
 		}
+		//$map['islock'] = 0;
 		return $map;
 	}
 	
@@ -242,7 +298,6 @@ class ZhuAction extends CommonAction
 		$sort = $sort == 'desc' ? 1 : 0;                  //排序方式
 		
 
-		
 		//模板赋值显示
 		$this->assign('list', $list);
 		$this->assign('sort', $sort);

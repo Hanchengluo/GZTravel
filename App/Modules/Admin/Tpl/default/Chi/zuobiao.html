@@ -1,0 +1,66 @@
+<form id="pagerForm" action="__URL__/search/dialogId/jingqu/callbackType/closeCurrent">
+	<input type="hidden" name="pageNum" value="1" />
+	<input type="hidden" name="numPerPage" value="${model.numPerPage}" />
+	<input type="hidden" name="orderField" value="${param.orderField}" />
+	<input type="hidden" name="orderDirection" value="${param.orderDirection}" />
+</form>
+
+<div class="pageHeader">
+	<form rel="pagerForm" action="__URL__/search/dialogId/jingqu/callbackType/closeCurrent" 
+	onsubmit="return dialogSearch(this);" method="post">
+	<div class="searchBar">
+		<table class="searchContent">
+			<tr>
+				<td>
+					<b>搜索</b> &nbsp; 关键字：<input type="text" name="keyword" value="<{$Think.post.keyword}>" /> [标题]
+				</td>
+				<td>
+					<div class="buttonActive"><div class="buttonContent"><button type="submit">检索</button></div></div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	</form>
+</div>
+<div class="pageContent">
+
+	<table class="table" layoutH="112" targetType="dialog" width="100%">
+			<thead>
+			<tr>
+			    <th width="10">ID</th>
+				<th width="30">坐标名称</th>
+				<th width="50">百度经度</th>
+				<th width="50">百度纬度</th>
+				<th width="50">查找带回</th>
+			</tr>
+		</thead>
+		<tbody>
+			<foreach name="list" item="vo">
+				<tr target="item_id" rel="<{$vo.id}>">
+				    <td><{$vo.id}></td>
+					<td><{$vo.name}></td>
+					<td><{$vo.bpointlng}></td>
+					<td><{$vo.bpointlat}></td>
+					<td>
+					<a class="btnSelect" href="javascript:$.bringBack({ orgName:'<{$vo.name}>',orgPointlng:'<{$vo.bpointlng}>', orgPointlat:'<{$vo.bpointlat}>'})" title="查找带回">选择</a>
+					</td>
+				</tr>
+			</foreach>
+		</tbody>
+	</table>
+
+	<div class="panelBar">
+		<div class="pages">
+			<span>显示</span>
+			<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+				<option value="10" <if condition="$numPerPage eq 10 ">selected</if>>10</option>
+				<option value="15" <if condition="$numPerPage eq 15 ">selected</if>>15</option>
+				<option value="20" <if condition="$numPerPage eq 20 ">selected</if>>20</option>
+				<option value="25" <if condition="$numPerPage eq 25 ">selected</if>>25</option>
+				<option value="30" <if condition="$numPerPage eq 30 ">selected</if>>30</option>
+			</select>
+			<span>共<{$totalCount}>条</span>
+		</div>
+		<div class="pagination" targetType="navTab" totalCount="<{$totalCount}>" numPerPage="<{$numPerPage}>" pageNumShown="10" currentPage="<{$currentPage}>"></div>
+	</div>
+</div>
