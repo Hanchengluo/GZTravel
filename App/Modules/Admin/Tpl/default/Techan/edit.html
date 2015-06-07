@@ -1,0 +1,70 @@
+
+<div class="pageContent">
+	<form method="post" action="__URL__/update/navTabId/techan/callbackType/closeCurrent"  class="pageForm required-validate" 
+		onsubmit="return validateCallback(this,navTabAjaxDone);">
+		<input type="hidden" name="id" value="<{$vo.id}>"/>
+		<div class="pageFormContent" layoutH="60">
+			<dl>
+				<dt>隶属商店：</dt>
+				<dd>			
+				<select name="shop_id" style="width:100%">
+					<foreach name="shoplist" item="volist">
+						<option value="<{$volist.id}>" <if condition="$vo['shop_id'] eq $volist['id']">selected</if>><{$volist.name}></option>
+					</foreach>
+				</select>
+				</dd>
+			</dl>
+			<dl>
+				<dt>特产名称：</dt>
+				<dd>
+				<input type="text" class="required"  style="width:70%"  id="name" name="name" value="<{$vo.name}>"/>
+				</dd>
+			</dl>
+			<dl>
+				<dt>语音介绍：</dt>
+				<dd>
+				<input type="hidden"  id="videourl" name="videourl"/>
+				<input id="videourl1" type="text"  readonly="readonly" style="width:70%" name="orgLookup.filedir" value="<{$vo.videourl}>" suggestFields="filedir" lookupGroup="orgLookup"/>
+				<a class="btnLook" href="__URL__/uploadAdd/type/video" width="400" height="400" rel="fileadd" lookupgroup="orgLookup"></a>
+				</dd>
+            </dl>
+<!--             <dl>
+				<dt>是否推荐：</dt>
+				<dd>
+				是<input type="radio" class="required"   name="recommend" value="1" <if condition="$vo['recommend'] eq 1">checked</if> />&nbsp;&nbsp;&nbsp;否<input type="radio" class="required"   name="recommend" value="0" <if condition="$vo['recommend'] eq 0">checked</if> />
+				</dd>
+			</dl> -->
+			<dl class="nowrap">
+				<dt>特产简介：</dt>
+				<dd>
+				<textarea class="required textInput valid" style="width:95%" name="title"><{$vo.title}></textarea>
+				</dd>
+			</dl>
+			<dl  class="nowrap">
+				<dt>特产描述：</dt>
+				<dd>
+					<textarea id="elm2"  name="comment"  style="width:100%;display: none;" rows="13" >      <{$vo.comment}>
+					</textarea>
+					<script>
+						$('#elm2').xheditor({tools:'Cut,Copy,Paste,Pastetext,|,Source,Blocktag,FontSize,Blod,Italic,Underline,Strikethrough,|,FontColor,BackColor,SelectAll,|,Removeformat,Align,List,Outdent,Indent,Fullscreen,About'});
+					</script>
+				</dd>
+			</dl>
+			<script>
+			   function setValue() {
+					$('#videourl').val($('#videourl1').val());
+				}
+			</script>
+		</div>
+		
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit" onclick="return setValue();">保存</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+</div>
+
+
+

@@ -120,8 +120,14 @@ class XingtypeAction extends CommonAction{
 		$model = M($name);
     	$pk=$model->getPk ();  
 		$data[$pk]=array('in', $_POST['ids']);
-		$model->where($data)->delete();
-		$this->success('更新成功');
+		$data1['xt_id'] = array('in',$_POST['ids']);
+		$count = M('Xing')->where($data1)->count('id');
+		if ($count > 0) {
+			$this->error(L('该类型的行程已存在，请先删除该类型的行程后，再删除！'));
+		} else {
+			$model->where($data)->delete();
+			$this->success('删除类型成功');	
+		}
 	}
 
    public function recAll(){

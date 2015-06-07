@@ -25,7 +25,7 @@
 				</dd>
 			</dl>
 			<dl>
-				<dt>吃地名称：</dt>
+				<dt>餐馆名称：</dt>
 				<dd>
 				<input type="hidden"  id="name" name="name"/>
 				<input id="name1" type="text" class="required"  style="width:70%" name="orgLookup.orgName" suggestFields="orgName" lookupGroup="orgLookup" />
@@ -37,44 +37,40 @@
 				<dd>
 				<input type="hidden"  id="videourl" name="videourl"/>
 				<input id="videourl1" type="text"  readonly="readonly" style="width:70%" name="orgLookup.filedir" suggestFields="filedir" lookupGroup="orgLookup"/>
-				<a class="btnLook" href="__URL__/uploadAdd" width="400" height="400" rel="fileadd" lookupgroup="orgLookup"></a>
+				<a class="btnLook" href="__URL__/uploadAdd/type/video" width="400" height="400" rel="fileadd" lookupgroup="orgLookup"></a>
 				</dd>
             </dl>
 			<dl class="nowrap">
-				<dt>吃地简介：</dt>
+				<dt>餐馆简介：</dt>
 				<dd>
 				<textarea class="required textInput valid" style="width:95%" name="title"></textarea>
 				</dd>
 			</dl>
 			<dl  class="nowrap">
-				<dt>吃地描述：</dt>
+				<dt>餐馆描述：</dt>
 				<dd>
-					<textarea id="elm2"  name="comment"  style="width:100%;display: none;" rows="13" >
-					</textarea>
-					<script>
-						$('#elm2').xheditor({tools:'Fullscreen',upLinkUrl:"__URL__/upload",upLinkExt:"zip,rar,txt",upImgUrl:"__URL__/upload",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"__URL__/upload",upFlashExt:"swf",upMediaUrl:"__URL__/upload",upMediaExt:"avi",urlBase:'__ROOT__/'});
-					</script>
+					<textarea id="elm2_chi_add"  name="comment"  style="width:100%;" rows="13" ></textarea>
 				</dd>
 			</dl>
-			<dl>
+<!-- 			<dl>
 				<dt>是否推荐：</dt>
 				<dd>
 				是<input type="radio" class="required"   name="recommend" value="1" <if condition="$vo['recommend'] eq 1">checked</if> />&nbsp;&nbsp;&nbsp;否<input type="radio" class="required"   name="recommend" value="0" <if condition="$vo['recommend'] eq 0">checked</if> />
 				</dd>
-			</dl>
-			<dl>
+			</dl> -->
+<!-- 			<dl>
 				<dt>是否有网：</dt>
 				<dd>
 				是<input type="radio" class="required"   name="isnet" value="1" <if condition="$vo['isnet'] eq 1">checked</if> />&nbsp;&nbsp;&nbsp;否<input type="radio" class="required"   name="isnet" value="0" <if condition="$vo['isnet'] eq 0">checked</if> />
 				</dd>
-			</dl>
+			</dl> -->
 			<dl>
 				<dt>开始时间：</dt>
-				<dd><input id="timepicker1" type="text" class="required"  style="width:70%" name="starttime" /></dd>
+				<dd><input id="timepicker1" type="text" class="text"  style="width:70%" name="starttime" /></dd>
 			</dl>
 			<dl>
 				<dt>结束时间：</dt>
-				<dd><input id="timepicker2" type="text" class="required"  style="width:70%" name="endtime" /></dd>
+				<dd><input id="timepicker2" type="text" class="text"  style="width:70%" name="endtime" /></dd>
 			</dl>
 			<script>
 				$('#timepicker1').datetimepicker({
@@ -91,26 +87,31 @@
 			<dl>
 				<dt>地址信息：</dt>
 				<dd>
-				<input type="text" class="required"  style="width:70%" name="address">
+				<input type="hidden" id="address" name="address">
+				<input type="text" id="address1" class="text"  style="width:70%" name="orgLookup.orgAddress" suggestFields="orgAddress" lookupGroup="orgLookup" />
 				</dd>
 			</dl>
 			<dl>
 				<dt>联系方式：</dt>
-				<dd><input type="text" class="required"  style="width:70%" name="tel"/></dd>
+				<dd><input type="text" class="text"  style="width:70%" name="tel"/></dd>
 			</dl>
 			<dl>
 				<dt>经度坐标：</dt>
 				<dd>
 				<input type="hidden"  id="pointlng" name="pointlng"/>
-				<input type="text" id="pointlng1" class="required"  style="width:70%" name="orgLookup.orgPointlng" readonly="readonly" suggestFields="orgPointlng" lookupGroup="orgLookup" />
+				<input type="text" id="pointlng1" class="text"  style="width:70%" name="orgLookup.orgPointlng"  suggestFields="orgPointlng" lookupGroup="orgLookup" />
 				</dd>
 			</dl>
 			<dl>
 				<dt>纬度坐标：</dt>
 				<dd>
 				<input type="hidden"  id="pointlat" name="pointlat"/>
-				<input type="text" id="pointlat1" class="required"  readonly="readonly" style="width:70%" name="orgLookup.orgPointlat" value="" suggestFields="orgPointlat" lookupGroup="orgLookup" />
+				<input type="text" id="pointlat1" class="text"  style="width:70%" name="orgLookup.orgPointlat" value="" suggestFields="orgPointlat" lookupGroup="orgLookup" />
 				</dd>
+			</dl>
+			<dl>
+				<dt>均价：</dt>
+				<dd><input type="text" class="text"  style="width:70%" name="aveprice" />&nbsp;元</dd>
 			</dl>
 			<script>
 			   function setValue() {
@@ -118,6 +119,7 @@
 					$('#videourl').val($('#videourl1').val());
 					$('#pointlng').val($('#pointlng1').val());
 					$('#pointlat').val($('#pointlat1').val());
+					$('#address').val($('#address1').val());
 				}
 			</script>
 				  

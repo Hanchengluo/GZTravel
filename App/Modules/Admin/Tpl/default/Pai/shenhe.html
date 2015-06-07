@@ -1,0 +1,23 @@
+<div class="pageContent">
+	<form method="post" action="__URL__/shenheState/navTabId/index/callbackType/closeCurrent"  class="pageForm required-validate"
+		onsubmit="return validateCallback(this,dialogAjaxDone);">
+		<input type="hidden" name="id" value="<{$vo.id}>"/>
+		<input type="hidden" name="state" id="state"/>
+		<div class="pageFormContent" layoutH="60">
+		    <img src="<{$vo.picurl}>"/>
+		</div>
+		<script>
+			   function setValue(stateValue) {
+					$('#state').val(stateValue);
+				}
+			</script>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit" onclick="return setValue(1);">审核通过</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="submit" class="close" onclick="return setValue(2);">审核不过</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">审核取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+</div>
+

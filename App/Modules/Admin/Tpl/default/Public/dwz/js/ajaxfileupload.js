@@ -28,12 +28,17 @@ jQuery.extend({
 
             return io;   
     },
-    createUploadForm: function(id, fileElementId)
+    createUploadForm: function(id, fileElementId, data)
  {
   //create form 
   var formId = 'jUploadForm' + id;
   var fileId = 'jUploadFile' + id;
   var form = jQuery('<form  action="" method="POST" name="' + formId + '" id="' + formId + '" enctype="multipart/form-data"></form>'); 
+  if (data) {  
+    for (var i in data) {  
+        $('<input type="hidden" name="' + i + '" value="' + data[i] + '" />').appendTo(form);  
+    }  
+  }
   var oldElement = jQuery('#' + fileElementId);
   var newElement = jQuery(oldElement).clone();
   jQuery(oldElement).attr('id', fileId);
@@ -51,7 +56,7 @@ jQuery.extend({
         // TODO introduce global settings, allowing the client to modify them for all requests, not only timeout  
         s = jQuery.extend({}, jQuery.ajaxSettings, s);
         var id = s.fileElementId;        
-  var form = jQuery.createUploadForm(id, s.fileElementId);
+  var form = jQuery.createUploadForm(id, s.fileElementId, s.data);
   var io = jQuery.createUploadIframe(id, s.secureuri);
   var frameId = 'jUploadFrame' + id;
   var formId = 'jUploadForm' + id;  

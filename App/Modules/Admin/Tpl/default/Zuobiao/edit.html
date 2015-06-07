@@ -2,11 +2,20 @@
 	<form method="post" action="__URL__/update/navTabId/zuobiao/callbackType/closeCurrent"  class="pageForm required-validate" 
 		onsubmit="return validateCallback(this,dialogAjaxDone);">
 		<input type="hidden" name="id" value="<{$vo.id}>"/>
-		<div class="pageFormContent" layoutH="60" style="width:50%;float:left">
+		<div class="pageFormContent" layoutH="60" style="width:40%;float:left">
+			<dl>
+			<dt>服务级别:</dt>
+			<dd>
+			<select class="combox required" name="level" style="width:100%;" ref="as_id" refUrl="__URL__/getLevel/level/{value}">
+				<option value="2" <if condition="$vo['level'] eq 2">selected</if>>一级级别</option>
+				<option value="3" <if condition="$vo['level'] eq 3">selected</if>>二级级别</option>
+			</select>
+			</dd>
+			</dl>
 			<dl>
 			<dt>所属类别:</dt>
 			<dd>
-			<select name="as_id" style="width:100%">
+			<select class="combox required" name="as_id" id="as_id" style="width:100%">
 				<foreach name="aslist" item="volist">
 					<option value="<{$volist.id}>" <if condition="$vo['as_id'] eq $volist['id']">selected</if>><{$volist.name}></option>
 				</foreach>
@@ -14,32 +23,53 @@
 			</dd>
 			</dl>
 			<dl>
-				<dt>坐标名称</dt>
-				<dd><input type="text" class="required"  style="width:100%" name="name" value="<{$vo.name}>"/></dd>
+				<dt>区域名称</dt>
+				<dd><input type="text"  class="required"  style="width:100%" name="name" value="<{$vo.name}>"/>
+				</dd>
+			</dl>
+			<dl>
+				<dt>地址信息</dt>
+				<dd><input type="text" class="required"  style="width:100%" name="address" id="address" value="<{$vo.address}>"/>
+				</dd>
 			</dl>
 			<dl>
 				<dt>经度坐标</dt>
-				<dd><input type="text" style="width:100%" name="pointlng" id="pointlng" value="<{$vo.pointlng}>"/></dd>
+				<dd><input type="text" style="width:100%" name="pointlng" id="pointlng" <if condition="$vo['pointlng'] neq 0">value="<{$vo.pointlng}>"</if>/></dd>
 			</dl>
 			<dl>
 				<dt>纬度坐标</dt>
-				<dd><input type="text" style="width:100%" name="pointlat" id="pointlat" value="<{$vo.pointlat}>"/></dd>
+				<dd><input type="text" style="width:100%" name="pointlat" id="pointlat" <if condition="$vo['pointlat'] neq 0">value="<{$vo.pointlat}>"</if>/></dd>
 			</dl>
 			<dl>
 				<dt>百度经度</dt>
-				<dd><input type="text" class="required"  style="width:100%" name="bpointlng" id="bpointlng" value="<{$vo.bpointlng}>" onclick="translateZuobiao();"/></dd>
+				<dd><input type="text" class="required"  readonly="readonly" style="width:100%" name="bpointlng" id="bpointlng" value="<{$vo.bpointlng}>" onclick="translateZuobiao();"/></dd>
 			</dl>
 			<dl>
 				<dt>百度纬度</dt>
-				<dd><input type="text" class="required"  style="width:100%" name="bpointlat" id="bpointlat" value="<{$vo.bpointlat}>" onclick="translateZuobiao();"/></dd>
+				<dd><input type="text" class="required"  readonly="readonly" style="width:100%" name="bpointlat" id="bpointlat" value="<{$vo.bpointlat}>" onclick="translateZuobiao();"/></dd>
+			</dl>
+			<dl>
+				<dt>图片：</dt>
+				<dd>
+					<input type="hidden"  id="picurl" name="picurl"/>
+					<input id="picurl1" type="text"  readonly="readonly" style="width:70%" name="orgLookup.filedir" suggestFields="filedir" lookupGroup="orgLookup" value="<{$vo.picurl}>"/>
+					<a class="btnLook" href="__URL__/uploadAdd/type/picture" width="400" height="400" rel="fileedit" lookupgroup="orgLookup"></a>
+				</dd>
 			</dl>
 		</div>
-		<div id="allmap" style="width:50%;float:left;margin-top:20px;"></div>
-			<script>
+		<span>
+			<span>区域名称</span>
+			<span>
+			<input type="text" id="suggestId"  name="name" value=""/>
+			<input type="button" onclick="searchMap();" value="搜索">
+			</span>
+		</span>
+		<div id="allmap" style="width:60%;float:left;margin-top:20px;"></div>
+			<script type="text/javascript">
 					//地图属性
 				$("#allmap").css({
-				"width":"380px",
-				"height":"360px",
+				"width":"550px",
+				"height":"500px",
 				"overflow":"hidden",
 				"margin":"10",
 				"font-family":"微软雅黑"
@@ -47,25 +77,52 @@
 
 				// 百度地图API功能
 				var map = new BMap.Map("allmap");    // 创建Map实例
-				map.centerAndZoom(new BMap.Point($('#bpointlng').val(), $('#bpointlat').val()), 13);  // 初始化地图,设置中心点坐标和地图级别
-				map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
-				map.setCurrentCity("贵州");          // 设置地图显示的城市 此项是必须设置的
+				var point = new BMap.Point(<{$vo.bpointlng}>, <{$vo.bpointlat}>);
+				map.centerAndZoom(point, 13);
+				var marker = new BMap.Marker(point);  // 创建标注
+				map.addOverlay(marker);               // 将标注添加到地图中
+				marker.setAnimation(BMAP_ANIMATION_BOUNCE);
 				map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
 				map.addControl(new BMap.NavigationControl());
+				map.setCenter(point);
+
+				
+
 				function showInfo(e){
 					$('#bpointlng').val(e.point.lng);
 					$('#bpointlat').val(e.point.lat);
+					var gc = new BMap.Geocoder();
+					gc.getLocation(e.point, function(rs){
+	          		//获取输入地址
+	         		var addComp = rs.addressComponents;
+	          		var address = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+	          		$('#address').val(address);
+	         	 	});
+
 				}
 				map.addEventListener("click", showInfo);
 				function translateZuobiao() {
-				    if ($('#pointlng').val() != 0 && $('#pointlat').val() != 0) {
+					if($('#pointlng').val() == "" || $('#pointlng').val() == "") {
+						return;
+					}
+					if($('#pointlng').val() == 0 || $('#pointlng').val() == 0) {
+						return;
+					}
+					if($('#pointlng').val() == '例：106.2345' || $('#pointlng').val() == '例：26.2345') {
+						return;
+					}
 					var gpsPoint = new BMap.Point($('#pointlng').val(),$('#pointlat').val());
 					//坐标转换完之后的回调函数
 					translateCallback = function (point){
 						$('#bpointlng').val(point.lng);
 						$('#bpointlat').val(point.lat);
 						var allOverlay = map.getOverlays();
-						map.removeOverlay(allOverlay[0]);
+						for (var i = 0; i < allOverlay.length -1; i++){
+							if(allOverlay[i].getLabel().content == "百度标注"){
+								map.removeOverlay(allOverlay[i]);
+							}
+						}
+
 						var marker = new BMap.Marker(point);
 						map.addOverlay(marker);
 						var label = new BMap.Label("百度标注",{offset:new BMap.Size(20,-10)});
@@ -74,13 +131,38 @@
 						map.setCenter(point);
 					}
 					BMap.Convertor.translate(gpsPoint,0,translateCallback);
+				}
+				function setValue() {
+			   		if ($('#pointlng').val() == "例：106.2345") {
+					    $('#pointlng').val('');
 					}
+					if ($('#pointlat').val() == "例：26.2345") {
+					    $('#pointlat').val('');
+					}
+					$('#picurl').val($('#picurl1').val());
+				}
+
+
+				function searchMap(){
+					map.clearOverlays();    //清除地图上所有覆盖物
+					function myFun(){
+						var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+						map.centerAndZoom(pp, 16);
+						map.addOverlay(new BMap.Marker(pp));    //添加标注
+						map.setViewport(pp);
+					}
+					var local = new BMap.LocalSearch(map, { //智能搜索
+					  onSearchComplete: myFun
+					});
+
+					var mapName = $('#suggestId').val();
+					local.search(mapName);
 				}
 			</script>
 		
 		<div class="formBar">
 			<ul>
-				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">保存</button></div></div></li>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit" onclick="return setValue();">保存</button></div></div></li>
 				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
 			</ul>
 		</div>

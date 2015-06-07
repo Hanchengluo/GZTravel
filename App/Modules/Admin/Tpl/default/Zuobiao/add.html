@@ -1,44 +1,80 @@
 <div class="pageContent">
 	<form method="post" action="__URL__/insert/navTabId/zuobiao/callbackType/closeCurrent"  
 		onsubmit="return validateCallback(this,dialogAjaxDone);" target="dialog">
-		<div class="pageFormContent" layoutH="60" style="width:50%;float:left">
+		<div class="pageFormContent" layoutH="60" style="width:40%;float:left">
+			<dl>
+			<dt>服务级别:</dt>
+			<dd>
+			<select class="combox required" name="jbid" style="width:100%;" ref="as_id" refUrl="__URL__/getLevel/level/{value}">
+				<option value="2" selected="selected">一级级别</option>
+				<option value="3" >二级级别</option>
+			</select>
+			</dd>
+			</dl>
 			<dl>
 			<dt>所属类别:</dt>
 			<dd>
-			<select name="as_id" style="width:100%">
-				<foreach name="aslist" item="vo">
-					<option value="<{$vo.id}>" ><{$vo.name}></option>
+			<select class="combox required" name="as_id" style="width:100%;" id="as_id">
+				<foreach name="aslist" item="volist">
+					<option value="<{$volist.id}>"><{$volist.name}></option>
 				</foreach>
 			</select>
 			</dd>
 			</dl>
 			<dl>
 				<dt>区域名称</dt>
-				<dd><input type="text" class="required"  style="width:100%" name="name"/></dd>
+				<dd><input type="text"  class="required"  style="width:100%" name="name" value="" />
+				</dd>
+			</dl>
+
+			<dl>
+				<dt>地址信息</dt>
+				<dd><input type="text" class="required"  style="width:100%" name="address" id="address"/>
+				</dd>
 			</dl>
 			<dl>
 				<dt>原始经度</dt>
-				<dd><input type="text"  style="width:100%" name="pointlng" id="pointlng"/></dd>
+				<dd><input type="text"  style="width:100%" name="pointlng" id="pointlng" value="例：106.2345" 
+				onfocus="if (value =='例：106.2345'){value =''}" 
+				onblur="if (value ==''){value='例：106.2345'}"/></dd>
 			</dl>
 			<dl>
 				<dt>原始纬度</dt>
-				<dd><input type="text"  style="width:100%" name="pointlat" id="pointlat"/></dd>
+				<dd><input type="text"  style="width:100%" name="pointlat" id="pointlat" value="例：26.2345" 
+				onfocus="if (value =='例：26.2345'){value =''}" 
+				onblur="if (value ==''){value='例：26.2345'}"/></dd>
 			</dl>
 			<dl>
 				<dt>百度经度</dt>
-				<dd><input type="text" class="required"  style="width:100%" name="bpointlng" id="bpointlng" onclick="translateZuobiao();"/></dd>
+				<dd><input type="text" class="required"  readonly="readonly" style="width:100%" name="bpointlng" id="bpointlng" onclick="translateZuobiao();"/></dd>
 			</dl>
 			<dl>
 				<dt>百度纬度</dt>
-				<dd><input type="text" class="required"  style="width:100%" name="bpointlat" id="bpointlat" onclick="translateZuobiao();"/></dd>
+				<dd><input type="text" class="required"  readonly="readonly" style="width:100%" name="bpointlat" id="bpointlat" onclick="translateZuobiao();"/></dd>
 			</dl>
+			<dl>
+				<dt>图片：</dt>
+				<dd>
+					<input type="hidden"  id="picurl" name="picurl"/>
+					<input id="picurl1" type="text"  readonly="readonly" style="width:70%" name="orgLookup.filedir" suggestFields="filedir" lookupGroup="orgLookup"/>
+					<a class="btnLook" href="__URL__/uploadAdd/type/picture" width="400" height="400" rel="fileadd" lookupgroup="orgLookup"></a>
+				</dd>
+			</dl>
+			<dl style="color:red;margin-top:10px;">温馨提示：此图片上传只针对于公共服务区（银行，厕所），其他图片请在对应列表添加。</dl>
 		</div>
-		<div id="allmap" style="width:50%;float:left;margin-top:20px;"></div>
-			<script>
+		<span>
+			<span>区域名称</span>
+			<span>
+			<input type="text" id="suggestId"  name="name" value=""/>
+			<input type="button" onclick="searchMap();" value="搜索">
+			</span>
+		</span>
+		<div id="allmap" style="width:60%;float:left;margin-top:20px;"></div>
+			<script type="text/javascript">
 					//地图属性
 				$("#allmap").css({
-				"width":"380px",
-				"height":"360px",
+				"width":"550px",
+				"height":"500px",
 				"overflow":"hidden",
 				"margin":"10",
 				"font-family":"微软雅黑"
@@ -51,12 +87,31 @@
 				map.setCurrentCity("贵州");          // 设置地图显示的城市 此项是必须设置的
 				map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
 				map.addControl(new BMap.NavigationControl());
+
+
 				function showInfo(e){
 					$('#bpointlng').val(e.point.lng);
 					$('#bpointlat').val(e.point.lat);
+					var gc = new BMap.Geocoder();
+					gc.getLocation(e.point, function(rs){
+	          		//获取输入地址
+	         		var addComp = rs.addressComponents;
+	          		var address = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+	          		$('#address').val(address);
+	         	 	});
+
 				}
 				map.addEventListener("click", showInfo);
 				function translateZuobiao() {
+					if($('#pointlng').val() == "" || $('#pointlng').val() == "") {
+						return;
+					}
+					if($('#pointlng').val() == 0 || $('#pointlng').val() == 0) {
+						return;
+					}
+					if($('#pointlng').val() == '例：106.2345' || $('#pointlng').val() == '例：26.2345') {
+						return;
+					}
 					var gpsPoint = new BMap.Point($('#pointlng').val(),$('#pointlat').val());
 					//坐标转换完之后的回调函数
 					translateCallback = function (point){
@@ -73,11 +128,37 @@
 					}
 					BMap.Convertor.translate(gpsPoint,0,translateCallback);
 				}
+				
+			   function setValue() {
+			   		if ($('#pointlng').val() == "例：106.2345") {
+					    $('#pointlng').val('');
+					}
+					if ($('#pointlat').val() == "例：26.2345") {
+					    $('#pointlat').val('');
+					}
+				   $('#picurl').val($('#picurl1').val());
+				}
+
+				function searchMap(){
+					map.clearOverlays();    //清除地图上所有覆盖物
+					function myFun(){
+						var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+						map.centerAndZoom(pp, 16);
+						map.addOverlay(new BMap.Marker(pp));    //添加标注
+						map.setViewport(pp);
+					}
+					var local = new BMap.LocalSearch(map, { //智能搜索
+					  onSearchComplete: myFun
+					});
+
+					var mapName = $('#suggestId').val();
+					local.search(mapName);
+				}
+
 			</script>
-			
 		<div class="formBar">
 			<ul>
-				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">保存</button></div></div></li>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit" onclick="return setValue();">保存</button></div></div></li>
 				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
 			</ul>
 		</div>

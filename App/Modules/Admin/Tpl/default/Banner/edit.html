@@ -1,0 +1,40 @@
+<div class="pageContent">
+	<form method="post" action="__URL__/update/navTabId/banner/callbackType/closeCurrent"  class="pageForm required-validate" 
+		onsubmit="return validateCallback(this,dialogAjaxDone);">
+		<input type="hidden" name="id" value="<{$vo.id}>"/>
+		<div class="pageFormContent" layoutH="60">
+		<dl>
+				<dt>幻灯标题：</dt>
+				<dd><input type="text" class="required"  style="width:100%" name="name" value="<{$vo.name}>"/></dd>
+			</dl>
+			<dl class="nowrap">
+				<dt>幻灯简介：</dt>
+				<dd>
+				<textarea rows="10" class="required" style="width:70%;margin-left:130px;" name="title"><{$vo.title}>
+				</textarea>
+				</dd>
+			</dl>
+			<dl>
+				<dt>幻灯链接：</dt>
+				<dd>
+				<input type="text"   style="width:300px;" name="url" value="<{$vo.url}>"/>
+				</dd>
+			</dl>
+			<dl>
+				<dt>排序等级：</dt>
+				<dd>
+				<input type="text"  style="width:35%" name="sort" value="<{$vo.sort}>"/>
+				<span style="color:red;margin-left:20px;">数字越大，排序越前</span>
+				</dd>
+			</dl>
+		</div>
+
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">保存</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+</div>
+

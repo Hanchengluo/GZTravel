@@ -12,6 +12,11 @@ class ServiceAction extends CommonAction{
 			$this->_filter($map);
 		}
 		$model = M('Areaservice');
+		$ids = array('2','3');
+		$parent = $model->where(array())->field('id, name')->select();
+		$this->assign('parent',$parent);
+		$map['level'] = array ('in',$ids);
+		$map['name'] = array('not in',array('美食', '特产'));
 		if (!empty($model)) {
 			$this->_list($model, $map);
 		}
@@ -32,6 +37,7 @@ class ServiceAction extends CommonAction{
 	public function add() {
 		$m=M('Areaservice');
 		$data['level']=1;
+		$data['islock'] = 0;
 		$aslist=$m->where($data)->select();
 		$this->assign('aslist',$aslist);
 		$this->display();
@@ -56,10 +62,13 @@ class ServiceAction extends CommonAction{
 	
 	public function edit() {
 		$model = M('Areaservice');
-		$id = $_REQUEST[$model->getPk()];
-		$vo = $model->find($id);
+		$ids = I('id');
+		$id = explode(',', $ids);
+
+		$vo = $model->find($id[0]);
 		$this->assign('vo', $vo);
-		$data['level']=1;
+		$data['level'] = intval($id[1]) - 1;
+		$data['islock'] = 0;
 		$aslist=$model->where($data)->select();
 		$this->assign('aslist',$aslist);
 		$this->display('edit');
@@ -93,7 +102,7 @@ class ServiceAction extends CommonAction{
 		$data['id']=(I('id'));
 		$data['name']=I('name');
 		$data['level']=I('level');
-
+		$data['pid']=I('pid');
 		if(false === $model->create($data)) {
 			$this->error($model->getError());
 		}
@@ -130,6 +139,20 @@ class ServiceAction extends CommonAction{
 				$this->error('非法操作');
 			}
 		}
+	}
+
+	public function getLevel(){
+		$m=M('Areaservice');
+		$data['level']=$_REQUEST['level'] - 1;
+		$data['is_lock']=0;
+		$aslist = $m->where($data)->getField('id,name',true);
+		$list = "[";
+		foreach ($aslist as $key => $value) {
+			$list = $list."[\"".$key."\",\"".$value."\"],";
+		}
+		$list = substr($list, 0,strlen($list)-1);
+		$list = $list."]";
+		echo $list;
 	}
 	
 	

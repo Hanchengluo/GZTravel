@@ -1,0 +1,56 @@
+<include file="Public:pagerForm" />
+<div class="pageContent">
+	<form method="post" action="__URL__/savePic/callbackType/closeCurrent"  class="pageForm required-validate" 
+		onsubmit="return validateCallback(this,dialogAjaxDone);">
+		<input type="hidden"  id="pid" name="pid" value="<{$pid}>"/>
+		<input type="hidden"  id="as_id" name="as_id" value="<{$asid}>"/>
+		<input type="hidden"  id="total" name="total"/>
+		<input type="button"  id="uploadadd" value=" 添加一组" />
+		<div class="pageFormContent" layoutH="78" id="upload">
+			<script>
+			    var  total = 0;
+				function addInput() {
+					$("#upload").append("<dl id=\"picadd"+total+"\" style=\"width:100%\">"+
+					"<dt>图片"+total+"：</dt>" +
+					"<dd style=\"width:70%\">" +
+					"<input type=\"hidden\"  id=\"picurl"+total+"\" name=\"picurl"+total+"\"/>" +
+					"<input id=\"pic"+total+"\" type=\"text\"  readonly=\"readonly\" style=\"width:70%;\" name=\"orgLookup"+total+".filedir\" suggestFields=\"filedir\" lookupGroup=\"orgLookup"+total+"\" class=\"textInput readonly valid\" autocomplete=\"off\"/>" +
+					"<a class=\"btnLook\" href=\"__URL__/uploadAdd/type/picture\" width=\"400\" height=\"400\" rel=\"fileadd\" lookupgroup=\"orgLookup"+total+"\"></a>" +
+					"&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"button\"  id=\"uploadcancel"+total+"\" value=\" 删除\" onclick=\"del("+total+");\"/></dd>" +
+           		 	"</dl><hr id=\"line"+total+"\">");
+
+  				    $("#upload").find(".btnLook").each(function(){
+      			    	$(this).lookup();
+                    });
+				}
+
+				$("#uploadadd").click(function(){  
+                    addInput();
+                    total = total + 1;   
+    			});
+
+				function del(value) {
+					$('#picadd'+value).remove();
+					$('#line'+value).remove();
+					total = total - 1;   
+				}
+
+				function setValue() {
+					for (var i = 0; i < total; i++)
+					{
+						$('#picurl'+i).val($('#pic'+i).val());
+					}
+			   		$('#total').val(total);
+				}
+			</script>
+				  
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit" onclick="return setValue();">保存</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+</div>
+

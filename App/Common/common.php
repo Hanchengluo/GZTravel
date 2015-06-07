@@ -6,6 +6,14 @@
  * @param  string $callback [返回值]
  * @return [string]          [组合链接]
  */
+//截取字符长度
+function subtext($text, $length)
+{
+    if(mb_strlen($text, 'utf8') > $length) 
+    return mb_substr($text, 0, $length, 'utf8').'...';
+    return $text;
+}
+
 function showStatus($status, $id, $callback="") {
 	switch ($status) {
 		case 0 :
@@ -52,6 +60,29 @@ function rubbish($status, $id, $callback=""){
 			break;
 		case 0 :
 			$info = '<a href="__URL__/changeState/id/'.$id.'/islock/0/navTabId/news" target="ajaxTodo" callback="'.$callback.'">加入回收站</a>';
+			break;
+	}
+	return $info;
+}
+function bannerrubbish($status, $id, $callback=""){
+	switch ($status) {
+		case 1 :
+			$info = '<a href="__URL__/changeState/id/'.$id.'/islock/1/navTabId/rubbish" target="ajaxTodo" callback="'.$callback.'">恢复显示</a>';
+			break;
+		case 0 :
+			$info = '<a href="__URL__/changeState/id/'.$id.'/islock/0/navTabId/banner" target="ajaxTodo" callback="'.$callback.'">加入回收站</a>';
+			break;
+	}
+	return $info;
+}
+
+function pairubbish($status, $id, $callback=""){
+	switch ($status) {
+		case 1 :
+			$info = '<a href="__URL__/changeState/id/'.$id.'/islock/1/navTabId/pairubbish" target="ajaxTodo" callback="'.$callback.'">恢复显示</a>';
+			break;
+		case 0 :
+			$info = '<a href="__URL__/changeState/id/'.$id.'/islock/0/navTabId/pai" target="ajaxTodo" callback="'.$callback.'">加入回收站</a>';
 			break;
 	}
 	return $info;

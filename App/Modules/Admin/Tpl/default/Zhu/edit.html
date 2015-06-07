@@ -36,8 +36,8 @@
 				<dt>语音介绍：</dt>
 				<dd>
 				<input type="hidden"  id="videourl" name="videourl"/>
-				<input id="videourl1" type="text"  readonly="readonly" style="width:70%" name="orgLookup.filedir" suggestFields="filedir" lookupGroup="orgLookup" value="<{$vo.videourl}>"/>
-				<a class="btnLook" href="__URL__/uploadAdd" width="400" height="400" rel="fileadd" lookupgroup="orgLookup"></a>
+				<input id="videourl1" type="text"  readonly="readonly" style="width:70%" name="orgLookup.filedir" value="<{$vo.videourl}>" suggestFields="filedir" lookupGroup="orgLookup"/>
+				<a class="btnLook" href="__URL__/uploadAdd/type/video" width="400" height="400" rel="fileadd" lookupgroup="orgLookup"></a>
 				</dd>
             </dl>
 			<dl class="nowrap">
@@ -49,15 +49,10 @@
 			<dl  class="nowrap">
 				<dt>住地描述：</dt>
 				<dd>
-					<textarea id="elm2"  name="comment"  style="width:100%;display: none;" rows="13" >
-					<{$vo.comment}>
-					</textarea>
-					<script>
-						$('#elm2').xheditor({tools:'Fullscreen',upLinkUrl:"__URL__/upload",upLinkExt:"zip,rar,txt",upImgUrl:"__URL__/upload",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"__URL__/upload",upFlashExt:"swf",upMediaUrl:"__URL__/upload",upMediaExt:"avi",urlBase:'__ROOT__/'});
-					</script>
+					<textarea id="elm2_zhu_edit"  name="comment"  style="width:100%;" rows="13" ><{$vo.comment}></textarea>
 				</dd>
 			</dl>
-			<dl>
+<!-- 			<dl>
 				<dt>是否推荐：</dt>
 				<dd>
 				是<input type="radio" class="required"   name="recommend" value="1" <if condition="$vo['recommend'] eq 1">checked</if> />&nbsp;&nbsp;&nbsp;否<input type="radio" class="required"   name="recommend" value="0" <if condition="$vo['recommend'] eq 0">checked</if> />
@@ -68,14 +63,14 @@
 				<dd>
 				是<input type="radio" class="required"   name="isnet" value="1" <if condition="$vo['isnet'] eq 1">checked</if> />&nbsp;&nbsp;&nbsp;否<input type="radio" class="required"   name="isnet" value="0" <if condition="$vo['isnet'] eq 0">checked</if> />
 				</dd>
-			</dl>
+			</dl> -->
 			<dl>
 				<dt>开始时间：</dt>
-				<dd><input id="timepicker1" type="text" class="required"  style="width:70%" name="starttime" value="<{$vo.starttime}>"/></dd>
+				<dd><input id="timepicker1" type="text" class="text"  style="width:70%" name="starttime" value="<{$vo.starttime}>"/></dd>
 			</dl>
 			<dl>
 				<dt>结束时间：</dt>
-				<dd><input id="timepicker2" type="text" class="required"  style="width:70%" name="endtime" value="<{$vo.endtime}>"/></dd>
+				<dd><input id="timepicker2" type="text" class="text"  style="width:70%" name="endtime" value="<{$vo.endtime}>"/></dd>
 			</dl>
 			<script>
 				$('#timepicker1').datetimepicker({
@@ -92,7 +87,8 @@
 			<dl>
 				<dt>地址信息：</dt>
 				<dd>
-				<input type="text" class="required"  style="width:70%" name="address" value="<{$vo.address}>">
+				<input type="hidden" id="address" name="address">
+				<input type="text" id="address1" class="required"  style="width:70%" name="orgLookup.orgAddress" suggestFields="orgAddress" lookupGroup="orgLookup" value="<{$vo.address}>"/>
 				</dd>
 			</dl>
 			<dl>
@@ -103,14 +99,52 @@
 				<dt>经度坐标：</dt>
 				<dd>
 				<input type="hidden"  id="pointlng" name="pointlng"/>
-				<input type="text" id="pointlng1" class="required"  style="width:70%" name="orgLookup.orgPointlng" readonly="readonly" suggestFields="orgPointlng" lookupGroup="orgLookup" value="<{$vo.pointlng}>"/>
+				<input type="text" id="pointlng1" class="text"  style="width:70%" name="orgLookup.orgPointlng"  suggestFields="orgPointlng" lookupGroup="orgLookup" value="<{$vo.pointlng}>"/>
 				</dd>
 			</dl>
 			<dl>
 				<dt>纬度坐标：</dt>
 				<dd>
 				<input type="hidden"  id="pointlat" name="pointlat"/>
-				<input type="text" id="pointlat1" class="required"  readonly="readonly" style="width:70%" name="orgLookup.orgPointlat"  suggestFields="orgPointlat" lookupGroup="orgLookup" value="<{$vo.pointlat}>"/>
+				<input type="text" id="pointlat1" class="text"   style="width:70%" name="orgLookup.orgPointlat"  suggestFields="orgPointlat" lookupGroup="orgLookup" value="<{$vo.pointlat}>"/>
+				</dd>
+			</dl>
+			<dl>
+				<dt>均价：</dt>
+				<dd><input type="text" class="text"  style="width:70%" name="aveprice" value="<{$vo.aveprice}>"/>&nbsp;元</dd>
+			</dl>
+			<dl></dl>
+			
+			<dl style="color:red;margin-top:60px;">温馨提示：周边选择时可按住Ctrl键进行多选。</dl>
+			<dl></dl>
+			<dl>
+				<dt>周边餐饮：</dt>
+				<dd>
+					<select name="zbcy[]" id="zbcy" style="width:100%" multiple="multiple">
+						<foreach name="zbcylist" item="volist" key='key'>
+							<option value="<{$key}>" <in name="key" value="$vo['zbcy']">selected</in>><{$volist}></option>
+						</foreach>
+					</select>
+				</dd>
+			</dl>
+			<dl style="margin-top:60px;">
+				<dt>周边景点：</dt>
+				<dd>
+					<select name="zbjd[]" id="zbjd" style="width:100%" multiple="multiple">
+						<foreach name="zbjdlist" item="volist" key='key'>
+							<option value="<{$key}>" <in name="key" value="$vo['zbjd']">selected</in>><{$volist}></option>
+						</foreach>
+					</select>
+				</dd>
+			</dl>
+			<dl  style="margin-top:60px;">
+				<dt>周边商店：</dt>
+				<dd>
+					<select name="zbsd[]" id="zbsd" style="width:100%" multiple="multiple">
+						<foreach name="zbsdlist" item="volist" key='key'>
+							<option value="<{$key}>" <in name="key" value="$vo['zbsd']">selected</in>><{$volist}></option>
+						</foreach>
+					</select>
 				</dd>
 			</dl>
 			<script>
@@ -119,6 +153,7 @@
 					$('#videourl').val($('#videourl1').val());
 					$('#pointlng').val($('#pointlng1').val());
 					$('#pointlat').val($('#pointlat1').val());
+					$('#address').val($('#address1').val());
 				}
 			</script>
 		</div>

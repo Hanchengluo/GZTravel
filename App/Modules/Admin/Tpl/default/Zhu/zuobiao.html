@@ -1,12 +1,12 @@
- <form id="pagerForm" action="__URL__/search/dialogId/jingqu/callbackType/closeCurrent">
-	<input type="hidden" name="pageNum" value="1" />
-	<input type="hidden" name="numPerPage" value="${model.numPerPage}" />
+<form id="pagerForm" action="__URL__/zuobiao/dialogId/zhu/callbackType/closeCurrent" method="post" onsubmit="return dwzSearch(this,'dialog');" >
+	<input type="hidden" name="pageNum" value="${param.currentPage}" />
+	<input type="hidden" name="numPerPage" value="10" />
 	<input type="hidden" name="orderField" value="${param.orderField}" />
 	<input type="hidden" name="orderDirection" value="${param.orderDirection}" />
 </form>
 
 <div class="pageHeader">
-	<form rel="pagerForm" action="__URL__/search/dialogId/jingqu/callbackType/closeCurrent" 
+	<form rel="pagerForm" action="__URL__/search/dialogId/zhu/callbackType/closeCurrent" 
 	onsubmit="return dialogSearch(this);" method="post">
 	<div class="searchBar">
 		<table class="searchContent">
@@ -42,7 +42,7 @@
 					<td><{$vo.bpointlng}></td>
 					<td><{$vo.bpointlat}></td>
 					<td>
-					<a class="btnSelect" href="javascript:$.bringBack({ orgName:'<{$vo.name}>',orgPointlng:'<{$vo.bpointlng}>', orgPointlat:'<{$vo.bpointlat}>'})" title="查找带回">选择</a>
+					<a class="btnSelect" href="javascript:$.bringBack({ orgName:'<{$vo.name}>',orgPointlng:'<{$vo.bpointlng}>', orgPointlat:'<{$vo.bpointlat}>', orgAddress:'<{$vo.address}>'})" title="查找带回">选择</a>
 					</td>
 				</tr>
 			</foreach>
@@ -52,7 +52,7 @@
 	<div class="panelBar">
 		<div class="pages">
 			<span>显示</span>
-			<select class="combox" name="numPerPage" onchange="navTabPageBreak({numPerPage:this.value})">
+			<select class="combox" name="numPerPage" onchange="dialogPageBreak({numPerPage:this.value})">
 				<option value="10" <if condition="$numPerPage eq 10 ">selected</if>>10</option>
 				<option value="15" <if condition="$numPerPage eq 15 ">selected</if>>15</option>
 				<option value="20" <if condition="$numPerPage eq 20 ">selected</if>>20</option>
@@ -61,6 +61,6 @@
 			</select>
 			<span>共<{$totalCount}>条</span>
 		</div>
-		<div class="pagination" targetType="navTab" totalCount="<{$totalCount}>" numPerPage="<{$numPerPage}>" pageNumShown="10" currentPage="<{$currentPage}>"></div>
+		<div class="pagination" targetType="dialog" totalCount="<{$totalCount}>" numPerPage="<{$numPerPage}>" pageNumShown="10" currentPage="<{$currentPage}>"></div>
 	</div>
 </div>

@@ -1,0 +1,55 @@
+<include file="Public:pagerForm" />
+<script type="text/javascript">
+
+function ajaxFileUpload(obj, value){
+	var array = null;
+	if (value == 'picture') {
+		array = new Array('gif', 'jpeg', 'png', 'jpg');//可以上传的文件类型
+	} else {
+		array = new Array('mp3', 'wav', 'avi', 'mpg', 'wmv');//可以上传的文件类型
+	}
+
+    if (obj.value == '') {
+        alert("让选择要上传的文件!");
+        return false;
+    } else {
+        var fileContentType = obj.value.match(/^(.*)(\.)(.{1,8})$/)[3]; //这个文件类型正则很有用：）
+        var isExists = false;
+        for (var i in array) {
+            if (fileContentType.toLowerCase() == array[i].toLowerCase()) {
+                isExists = true;
+            	$.ajaxFileUpload({
+					url:'__URL__/upload',
+					data:{type : value},
+					secureuri:false,
+					fileElementId:'pic',
+					dataType:'json',
+					success:function(data){
+						if(data.code == 0){
+						    alertMsg.correct(data.message);
+						    $.bringBack({ filedir:data.file_url});
+						} else{
+						    alertMsg.error(data.message); 
+						}
+					}
+				});
+                return true;
+            }
+        }
+        if (isExists == false) {
+            obj.value = null;
+            alert("上传文件类型不正确!");
+            return false;
+        }
+        return false;
+    }
+}
+</script>
+<div class="pageContent">
+<form method="post" enctype="multipart/form-data"  class="pageForm required-validate" 
+		onsubmit="return validateCallback(this,dialogAjaxDone);">
+	<div class="pageFormContent" layoutH="60">
+		<dt><input id="pic" type="file" size="20" name="pic" class="input" onchange="return ajaxFileUpload(this,'<{$type}>');"></dt>
+	</div>
+</form>
+</div>

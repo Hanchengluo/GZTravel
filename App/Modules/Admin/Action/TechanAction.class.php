@@ -1,6 +1,6 @@
 <?php 
 /**
-* 景区类
+* 特产类
 * @author  <[s@easycms.cc]>
 */
 class TechanAction extends CommonAction
@@ -12,11 +12,29 @@ class TechanAction extends CommonAction
 			$this->_filter($map);
 		}
 		$model = M('Techan');
+		//$map['islock'] = 0;
 		if (!empty($model)) {
-			$this->_list($model, $map);
+			$this->_list($model, $map, 'sort');
 		}
+		$model1 = M('Shop');
+		$data['islock'] = 0;
+		$shoplist = $model1->where($data)->select();
+		$this->assign('shoplist', $shoplist);
 		$this->display();
 		return;
+	}
+	public function search() {
+		//列表过滤器，生成查询Map对象
+		$map = $this->_search('Zuobiao');
+		if(method_exists($this, '_filter')) {
+			$this->_filter($map);
+		}
+		$model = M('Zuobiao');
+		$map['islock'] = 0;
+		if (!empty($model)) {
+			$this->_list($model, $map, 'sort');
+		}
+		$this->display(zuobiao);
 	}
 
 	//添加搜索方法
@@ -28,15 +46,121 @@ class TechanAction extends CommonAction
 	}	
 	
 	public function add() {
+		$model1 = M('Shop');
+		$data['islock'] = 0;
+		$shoplist = $model1->where($data)->select();
+		$this->assign('shoplist', $shoplist);
 		$this->display('add');
 	}
-	
-	public function test() {
-		$this->display('test');
+
+	public function addPicture() {
+		$model1 = M('Areaservice');
+		$data['name'] = '特产';
+		$asid = $model1->where($data)->getField('id');
+		$model = M('Jingqu');
+		$pid = $_REQUEST[$model->getPk()];
+		$this->assign('pid', $pid);
+		$this->assign('asid', $asid);
+		$this->display('Public/addPhoto');
+	}
+
+	public function savePic() {
+		$model = M('Picture');
+		unset ( $_POST [$model->getPk()] );
+		
+		if (false === $model->create()) {
+			$this->error($model->getError());
+		}
+		$total = $_REQUEST['total'];
+		$as_id = $_REQUEST['as_id'];
+		$pid = $_REQUEST['pid'];
+
+		for ($i = 0; $i < $total; $i++) 
+		{ 
+			$data[$i]['pid'] = $pid;
+			$data[$i]['as_id'] = $as_id;
+			$data[$i]['picurl'] = $_REQUEST['picurl'.$i.''];
+		} 
+
+		//保存当前数据对象
+		if ($result = $model->addAll($data)) { //保存成功
+			// 回调接口
+			if (method_exists($this, '_tigger_insert')) {
+				$model->id = $result;
+				$this->_tigger_insert($model);
+			}
+			
+			//成功提示
+			$this->success(L('新增成功'));
+		} else {
+			//失败提示
+			$this->error(L('新增失败').$model->getLastSql());
+		}
+	}
+
+	public function savePhotos() {
+		$model = M('Picture');
+		unset ( $_POST [$model->getPk()] );
+
+		$data['pid'] = $_POST['pid'];
+		$data['as_id'] = $_POST['as_id'];
+
+		//保存当前数据对象
+		if ($_POST['picurl']) {
+			$res1 = $model->where(array('pid' => $_POST['pid'], 'as_id' => $_POST['as_id']))->find();
+			if ($res1['id']) {
+				$data['picurl'] = $_POST['picurl'];
+				$result = $model->where(array('id' => $res1['id']))->save($data);
+			} else {
+				$data['picurl'] = $_POST['picurl'];
+				$result = $model->add($data);
+			}
+		}
+
+		if ($_POST['minurl']) {
+			$res2 = $model->where(array('pid' => $_POST['pid'], 'as_id' => $_POST['as_id']))->find();
+			if ($res2['id']) {
+				$data['minurl'] = $_POST['minurl'];
+				$result = $model->where(array('id' => $res2['id']))->save($data);
+			} else {
+				$data['minurl'] = $_POST['minurl'];
+				$result = $model->add($data);
+			}
+		}
+
+		if ($result) { //保存成功
+			//成功提示
+			$this->success(L('更新成功'));
+		} else {
+			//失败提示
+			$this->error(L('更新失败').$model->getLastSql());
+		}
 	}
 	
+	public function yinyue() {
+		$model = M('Techan');
+		$id = $_REQUEST[$model->getPk()];
+		$vo = $model->find($id);
+		$this->assign('vo', $vo);
+		$this->display('Public/yinyue');
+	}
+	
+	public function photos() {
+		$model = M('Techan');
+		$pid = $_REQUEST[$model->getPk()];
+		$model1 = M('Areaservice');
+		$data['name'] = '特产';
+		$asid = $model1->where($data)->getField('id');
+		$model2 = M('Picture');
+		$map['pid'] = $pid;
+		$map['as_id'] = $asid;
+        $volist = $model2->where($map)->select();
+		$this->assign('volist', $volist);
+		$this->display('Public/photo');
+	}
+
 	public function insert(){
-		$model = D('category');
+		$model = D('Techan');
 		unset ( $_POST [$model->getPk()] );
 		
 		if (false === $model->create()) {
@@ -59,15 +183,19 @@ class TechanAction extends CommonAction
 	}
 	
 	public function edit() {
-		$model = M('category');
+		$model = M('Techan');
 		$id = $_REQUEST[$model->getPk()];
 		$vo = $model->find($id);
 		$this->assign('vo', $vo);
+		$model1 = M('Shop');
+		$data['islock'] = 0;
+		$shoplist = $model1->where($data)->select();
+		$this->assign('shoplist', $shoplist);
 		$this->display('edit');
 	}
 	
 	public function update() {
-		$model = D('category');		
+		$model = D('Techan');		
 		if(false === $model->create()) {
 			$this->error($model->getError());
 		}
@@ -82,6 +210,34 @@ class TechanAction extends CommonAction
 		} else {
 			//错误提示
 			$this->error(L('更新失败'));
+		}
+	}
+
+	public function deletePic() {
+		//删除指定记录
+		$model = M('Picture');
+		if (!empty($model)) {
+			$id = $_POST['id'];
+			if (isset($id)) {
+				$res = substr($id, strlen($id) - 1);
+				$data['id'] = $id;
+				if ($res == 's') {
+					$picurl = 'minurl';
+				} else {
+					$picurl = 'picurl';
+				}
+				$data['id'] = $id;
+				$url = $model->where($data)->getField($picurl);
+				if (false !== $model->where($data)->setField($picurl,null)) {
+					chmod($url,0777);
+					@unlink($url);
+					$this->success(L('删除成功'));
+				} else {
+					$this->error(L('删除失败'));
+				}
+			} else {
+				$this->error('非法操作');
+			}
 		}
 	}
 	
@@ -125,24 +281,19 @@ class TechanAction extends CommonAction
 			$this->error(L('更新失败'));
 		}
 	}
-	//删除状态
-	public function delete_tag(){
-		//删除指定记录
-		$model = M('category');
-		if (!empty($model)) {
-			$pk = $model->getPk();
-			$id = $_REQUEST[$pk];
-			if (isset($id)) {	
-				$condition = array($pk => array('in', explode(',', $id)));
-				if (false !== $model->where($condition)->setField('is_delete',1)) {
-					$this->success(L('删除成功'));
-				} else {
-					$this->error(L('删除失败'));
-				}
-			} else {
-				$this->error('非法操作');
-			}
-		}
+	
+	public function uploadAdd() {
+		$type = $_REQUEST['type'];
+		$this->assign('type', $type);
+		$this->display('Public/upload');
+	}
+
+
+	public function upload(){
+		//设置上传目录
+		$type = $_POST['type'];		
+		$upFilePath = "./Uploads/Techan/".$type."/";
+		$this -> uploadPic($upFilePath);
 	}
 	
 	/**
@@ -158,6 +309,7 @@ class TechanAction extends CommonAction
 		}
 		$model = M($name);
 		$map = array();
+		//$map['islock'] = 0;
 		foreach ($model->getDbFields() as $key => $val) {
 			if (substr($key, 0, 1) == '_')
 				continue;
@@ -165,6 +317,7 @@ class TechanAction extends CommonAction
 				$map[$val] = $_REQUEST[$val];
 			}
 		}
+		//$map['islock'] = 0;
 		return $map;
 	}
 	
@@ -242,7 +395,6 @@ class TechanAction extends CommonAction
 		$sort = $sort == 'desc' ? 1 : 0;                  //排序方式
 		
 
-		
 		//模板赋值显示
 		$this->assign('list', $list);
 		$this->assign('sort', $sort);

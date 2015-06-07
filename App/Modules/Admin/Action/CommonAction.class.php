@@ -262,5 +262,203 @@ class CommonAction extends Action {
 		//执行添加
 		M("Event")->add($data);
 	}
+
+
+	public function create_sqlite($sql, $tbname){
+        $dsn = "mysql:host=".C('DB_HOST').":".C('DB_PORT').";dbname=".C('DB_NAME');
+        $db = new PDO($dsn, C('DB_USER'), C('DB_PWD')); 
+        $db->query('set names utf8');
+        $runsql = $db->query($sql);
+        $fields_rows = $runsql->columnCount();
+        $rows=$runsql->fetchAll(PDO::FETCH_ASSOC); 
+        $tb_string = "";
+     
+        for ($i = 0; $i < $fields_rows; $i++) {  
+            $dot = ($i > 0) ? "," : "";
+             
+            $tb_meta = $runsql->getColumnMeta($i);
+                          
+            $tb_string .= $dot.$tb_meta['name'];
+            $tb_string1 .= $dot.$tb_meta['name'];
+            switch($tb_meta['native_type']){
+                case "VAR_STRING":
+                    $tb_string .= " "."varchar";
+                    break;
+                     
+                case "LONG":
+                    $tb_string .= " "."integer";
+                    break; 
+                     
+                case "BLOB":
+                    $tb_string .= " "."text";
+                    break;
+                case "TIME":
+                    $tb_string .= " "."time";
+                    break;
+                case "DOUBLE":
+                    $tb_string .= " "."double";
+                    break;
+            }
+             
+            if(isset($tb_meta['flags'][1]) && ($tb_meta['flags'][1] === "primary_key")){
+                $tb_string .= " "."PRIMARY KEY";
+            }
+     
+            if($tb_meta['flags'][0] === "not_null") {
+                $tb_string .= " "."NOT NULL";
+            }        
+ 
+        }
+         
+        //创建数据的SQL语句
+        $create_tbs['table'] = "CREATE TABLE  IF NOT EXISTS ".$tbname." ($tb_string);";  
+        $create_tbs['table1'] = $tb_string1;
+        $create_tbs['data'] = $rows;
+        return $create_tbs;      
+    }
+
+    public function toSqlite($sql, $tbname) {
+    	$temp = $this->create_sqlite($sql, $tbname);
+    	C('DB_TYPE','pdo');
+    	C('DB_DSN','sqlite:./gztravel.db');
+    	C('DB_NAME','gztravel'); 
+    	C('DB_PREFIX','');
+    	C('DB_CHARSET','utf8');
+    	C('DB_FIELDS_CACHE',false);
+    	$model = new Model();
+/*    	$model->execute('DROP TABLE  IF  EXISTS '.$tbname);*/
+    	$model->execute($temp['table']);
+    	$model->execute('DELETE FROM '.$tbname);
+    	foreach ($temp['data'] as $key => $value) {
+    		$datastr = '';
+    		foreach ($temp['data'][$key] as $key1 => $value1) {
+    			$datastr .= "'".str_ireplace("'","''",$temp['data'][$key][$key1])."',";
+    		}
+    		$datastr = substr($datastr, 0, -1);
+    		$res = $model->execute("INSERT INTO ".$tbname." (".$temp['table1'].") VALUES (".$datastr.")");
+    		
+    	}
+    	return $res;
+    }
+
+
+	public function create_sqlite1($sql, $tbname){
+		$db = NULL;
+        $dsn = "mysql:host=".C('DB_HOST').":".C('DB_PORT').";dbname=".C('DB_NAME');
+        $db = new PDO($dsn, C('DB_USER'), C('DB_PWD')); 
+        $db->query('set names utf8');
+        $runsql = $db->query($sql);
+        $fields_rows = $runsql->columnCount();
+
+        $rows=$runsql->fetchAll(PDO::FETCH_ASSOC); 
+        $tb_string = "";
+     	
+        for ($i = 0; $i < $fields_rows; $i++) {  
+            $dot = ($i > 0) ? "," : "";
+             
+            $tb_meta = $runsql->getColumnMeta($i);
+                          
+            $tb_string .= $dot.$tb_meta['name'];
+            $tb_string1 .= $dot.$tb_meta['name'];
+            switch($tb_meta['native_type']){
+                case "VAR_STRING":
+                    $tb_string .= " "."varchar";
+                    break;
+                     
+                case "LONG":
+                    $tb_string .= " "."integer";
+                    break; 
+                     
+                case "BLOB":
+                    $tb_string .= " "."text";
+                    break;
+                case "TIME":
+                    $tb_string .= " "."time";
+                    break;
+                case "DOUBLE":
+                    $tb_string .= " "."double";
+                    break;
+            }
+             
+            if(isset($tb_meta['flags'][1]) && ($tb_meta['flags'][1] === "primary_key")){
+                $tb_string .= " "."PRIMARY KEY";
+            }
+     
+            if($tb_meta['flags'][0] === "not_null") {
+                $tb_string .= " "."NOT NULL";
+            }        
+ 
+        }
+         
+        //创建数据的SQL语句
+        $tb_string .= ', as_id integer NOT NULL';
+        $create_tbs['table'] = "CREATE TABLE  IF NOT EXISTS ".$tbname." ($tb_string);";  
+        $create_tbs['table1'] = $tb_string1.',as_id';
+        $create_tbs['data'] = $rows;
+        return $create_tbs;      
+    	}
+
+    public function toSqlite1($sql, $tbname, $asid) {
+    	$temp = $this->create_sqlite1($sql, $tbname);
+    	C('DB_TYPE','pdo');
+    	C('DB_DSN','sqlite:./gztravel.db');
+    	C('DB_NAME','gztravel'); 
+    	C('DB_PREFIX','');
+    	C('DB_CHARSET','utf8');
+    	C('DB_FIELDS_CACHE',false);
+    	$model = new Model($tbname);
+    	$model->execute($temp['table']);
+    	$model->execute('DELETE FROM '.$tbname);
+    	foreach ($temp['data'] as $key => $value) {
+    		$datastr = '';
+    		foreach ($temp['data'][$key] as $key1 => $value1) {
+    			$datastr .= "'".str_ireplace("'","''",$temp['data'][$key][$key1])."',";
+    		}
+    		$datastr = $datastr.$asid;
+
+    		$res = $model->execute("INSERT INTO ".$tbname." (".$temp['table1'].") VALUES (".$datastr.")");
+		}
+    	return $res;
+    }
+
+
+    //当前URL
+	public function returnURL(){
+		list(,$temp)=explode('/',__URL__);
+		return 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER["SERVER_PORT"].'/'.$temp;
+	}
+
+	//上传图片
+	public static function uploadPic($upFilePath) {
+
+		$file_name = $_FILES['pic']['name'];
+		$file_tmp_name = $_FILES['pic']['tmp_name'];
+		if(!is_dir($upFilePath)){
+			mkdir($upFilePath,0777,true);
+		}
+		$info = pathinfo($file_name);
+		$extend = $info['extension'];
+		$fileName = date("YmdHis").rand(100,999).'.'.$extend;
+		$file=@move_uploaded_file($file_tmp_name,$upFilePath.$fileName);
+
+/*		//生成缩略图
+		import('ORG.Util.Image.ThinkImage');
+		$image = new ThinkImage();
+		$image->open($upFilePath.$fileName);
+		$image->thumb($image->width(), $image->height(), 1)->save($upFilePath.$fileName);
+		
+		$thumbPath = $upFilePath.'thumb/';
+		if(!is_dir($thumbPath)){
+			mkdir($thumbPath,0777,true);
+		}
+		$image->thumb(640, 480, 1)->save($thumbPath.$fileName);*/
+
+		if($file === FALSE){
+			echo json_encode(array('code'=>'1','message'=>'上传失败','file_url'=>$upFilePath.$fileName));
+		}else{
+			echo json_encode(array('code'=>'0','message'=>'上传成功','file_url'=>$upFilePath.$fileName));
+		}
+	}
+
 }
 ?>

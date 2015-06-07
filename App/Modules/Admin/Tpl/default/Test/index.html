@@ -1,0 +1,34 @@
+<include file="Public:pagerForm" />
+
+<div class="pageContent">
+	<form action="__URL__/addChk" method="post" enctype="multipart/form-data">
+	<table cellspacing="1" cellpadding="2" width="99%" align="center" border="0">
+		<tbody>
+			<tr>
+			<th align="left" colspan="2" height="25">添加新游戏</th>
+			</tr>
+			<tr>
+			<td  width="17%" height="23">游戏名称</td>
+			<td width="83%"><strong><input type="text" name="gamename" /></strong></td>
+			</tr>
+			<tr>
+			<td  height="23">游戏图片</td>
+			<td ><input type="file" name="gameimg"/></td>
+			</tr>
+			<tr>
+			<td  width="17%" height="23">游戏简介<span></span></td>
+			<td  width="83%"><textarea name="gameinfo" cols="30" rows="5"></textarea></td>
+			</tr>
+			<tr>
+			<td height="23">游戏地址：</td>
+			<td>
+			<input type="text" name="gamelink"/></td>
+			</tr>
+			<tr>
+			<td height="23" colspan="2" ><input type="submit" value="添加" /> &nbsp; &nbsp;
+				<input type="reset" value="重新填写"/></td>
+			</tr>
+		</tbody>
+		</table>
+</form>
+</div>

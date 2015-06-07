@@ -9,6 +9,7 @@
 <link href="../Public/dwz/themes/css/core.css" rel="stylesheet" type="text/css" media="screen"/>
 <link href="../Public/dwz/themes/css/print.css" rel="stylesheet" type="text/css" media="print"/>
 <link href="../Public/dwz/uploadify/css/uploadify.css" rel="stylesheet" type="text/css" media="screen"/>
+<link href="../Public/dwz/themes/css/zzsc.css" rel="stylesheet" type="text/css" media="screen"/>
 <!--[if IE]>
 <link href="../Public/dwz/themes/css/ieHack.css" rel="stylesheet" type="text/css" media="screen"/>
 <![endif]-->
@@ -18,6 +19,7 @@
 <script src="../Public/dwz/js/jquery.cookie.js" type="text/javascript"></script>
 <script src="../Public/dwz/js/jquery.validate.js" type="text/javascript"></script>
 <script src="../Public/dwz/js/jquery.bgiframe.js" type="text/javascript"></script>
+
 <script src="../Public/dwz/js/dwz.core.js" type="text/javascript"></script>
 <script src="../Public/dwz/js/dwz.util.date.js" type="text/javascript"></script>
 <script src="../Public/dwz/js/dwz.validate.method.js" type="text/javascript"></script>
@@ -53,8 +55,9 @@
 <script src="../Public/dwz/xheditor/xheditor-1.1.14-zh-cn.min.js" type="text/javascript"></script>
 <script src="../Public/dwz/uploadify/scripts/jquery.uploadify.min.js" type="text/javascript"></script>
 
-<script type="text/javascript" src="http://api.map.baidu.com/api?key=cpHnZaWLBIHg6sjmRp2M9qCo&v=2.0"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=qE8QVFXpHgumM2YyiQG7G1A4"></script>
 <script type="text/javascript" src="../Public/dwz/js/convertor.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/CurveLine/1.5/src/CurveLine.min.js"></script>
 
 <link href="../Public/dwz/themes/css/jquery.datetimepicker.css" rel="stylesheet" type="text/css" media="screen"/>
 <script src="../Public/dwz/js/jquery.datetimepicker.js" type="text/javascript"></script>
@@ -63,6 +66,9 @@
 
 <script src="../Public/dwz/js/dwz.min.js" type="text/javascript"></script>
 <script src="../Public/dwz/js/dwz.regional.zh.js" type="text/javascript"></script>
+
+<script src='../Public/dwz/js/jquery.jplayer.min.js'></script>
+<script src='../Public/dwz/js/jplayer.playlist.min.js'></script>
 
 <script type="text/javascript">
 $(function(){
@@ -88,7 +94,7 @@ $(function(){
 			<div class="headerNav">
 				<a class="logo" href="#">标志</a>
 				<ul class="nav">
-					<li><a href="__APP__/" target="_blank">进入首页</a></li>	
+					<!--<li><a href="__APP__/" target="_blank">进入幻灯</a></li>-->	
 					<li><a href="#" target="_blank">欢迎您：<{$Think.session.adminuser}></a></li>
 					<li><a href="__GROUP__/Login/logout">退出</a></li>
 				</ul>
@@ -112,44 +118,16 @@ $(function(){
 			<div id="sidebar">
 				<div class="toggleCollapse"><h2>主菜单</h2><div>收缩</div></div>
 				<div class="accordion" fillSpace="sidebar">
-					<!-- 游管理 -->
-					<div class="accordionHeader">
-						<h2><span>Folder</span>游管理</h2>
+				<!-- 幻灯管理 -->
+<!--					<div class="accordionHeader">
+						<h2><span>Folder</span>幻灯管理</h2>
 					</div>
 					<div class="accordionContent">
 						<ul class="tree treeFolder">
-							<li><a href="<{:U('Jingqu/index')}>" target="navTab" rel="jingqu" title="景区列表" >景区列表</a></li>
-							<li><a href="<{:U('Jingdian/index')}>" target="navTab" rel="jingdian" title="景点列表" >景点列表</a></li>
+							<li><a href="<{:U('Banner/index')}>" target="navTab" rel="banner" title="幻灯列表" >幻灯列表</a></li>
+							<li><a href="<{:U('Banner/rubbish')}>" target="navTab" rel="rubbish" title="幻灯回收站" >幻灯回收站</a></li>
 						</ul>
-					</div>
-					<!--吃管理-->
-					<div class="accordionHeader">
-						<h2><span>Folder</span>吃管理</h2>
-					</div>
-					<div class="accordionContent">
-						<ul class="tree treeFolder">
-							<li><a href="<{:U('Chi/index')}>" target="navTab" rel="chi" title="吃地列表">吃地列表</a></li>
-							<li><a href="<{:U('Meishi/index')}>" target="navTab" rel="meishi" title="美食列表">美食列表</a></li>
-						</ul>
-					</div>
-					<!--住管理-->
-					<div class="accordionHeader">
-						<h2><span>Folder</span>住管理</h2>
-					</div>
-					<div class="accordionContent">
-						<ul class="tree treeFolder">
-							<li><a href="<{:U('Zhu/index')}>" target="navTab" rel="zhu" title="住地列表" >住地列表</a></li>
-						</ul>
-					</div>
-					<!--拍管理-->
-					<div class="accordionHeader">
-						<h2><span>Folder</span>拍管理</h2>
-					</div>
-					<div class="accordionContent">
-						<ul class="tree treeFolder">
-							<li><a href="<{:U('Pai/index')}>" target="navTab" rel="listpicture" title="照片管理" >照片管理</a></li>
-						</ul>
-					</div>
+					</div>-->
 					<!-- 行程管理 -->
 					<div class="accordionHeader">
 						<h2><span>Folder</span>行程管理</h2>
@@ -162,16 +140,46 @@ $(function(){
 							<li><a href="<{:U('Xingtype/rubbish')}>" target="navTab" rel="xingtyperubbish" title="行程类型回收站" >行程类型回收站</a></li>
 						</ul>
 					</div>
-					<!-- 商店管理 -->
+					<!--吃管理-->
 					<div class="accordionHeader">
-						<h2><span>Folder</span>商店管理</h2>
+						<h2><span>Folder</span>美食管理</h2>
 					</div>
 					<div class="accordionContent">
 						<ul class="tree treeFolder">
-							<li><a href="<{:U('Shop/index')}>" target="navTab" rel="listcate" title="商店列表" >商店列表</a></li>
-							<li><a href="<{:U('Techan/index')}>" target="navTab" rel="listarticle" title="特产列表" >特产列表</a></li>
+							<li><a href="<{:U('Chi/index')}>" target="navTab" rel="chi" title="餐馆列表">餐馆列表</a></li>
+							<li><a href="<{:U('Meishi/index')}>" target="navTab" rel="meishi" title="美食列表">美食列表</a></li>
 						</ul>
 					</div>
+					<!--住宿管理-->
+					<div class="accordionHeader">
+						<h2><span>Folder</span>住宿管理</h2>
+					</div>
+					<div class="accordionContent">
+						<ul class="tree treeFolder">
+							<li><a href="<{:U('Zhu/index')}>" target="navTab" rel="zhu" title="住地列表" >住地列表</a></li>
+						</ul>
+					</div>
+					<!-- 景点管理 -->
+					<div class="accordionHeader">
+						<h2><span>Folder</span>景点管理</h2>
+					</div>
+					<div class="accordionContent">
+						<ul class="tree treeFolder">
+							<li><a href="<{:U('Jingqu/index')}>" target="navTab" rel="jingqu" title="景区列表" >景区列表</a></li>
+							<li><a href="<{:U('Jingdian/index')}>" target="navTab" rel="jingdian" title="景点列表" >景点列表</a></li>
+						</ul>
+					</div>
+					<!-- 购物管理 -->
+					<div class="accordionHeader">
+						<h2><span>Folder</span>购物管理</h2>
+					</div>
+					<div class="accordionContent">
+						<ul class="tree treeFolder">
+							<li><a href="<{:U('Shop/index')}>" target="navTab" rel="shop" title="商店列表" >商店列表</a></li>
+							<li><a href="<{:U('Techan/index')}>" target="navTab" rel="techan" title="特产列表" >特产列表</a></li>
+						</ul>
+					</div>					
+					
 					<!-- 特色活动管理 -->
 					<div class="accordionHeader">
 						<h2><span>Folder</span>活动管理</h2>
@@ -194,6 +202,19 @@ $(function(){
 							<li><a href="<{:U('Newstype/rubbish')}>" target="navTab" rel="newstyperubbish" title="新闻类型回收站" >新闻类型回收站</a></li>
 						</ul>
 					</div>
+					<!--拍管理-->
+					<div class="accordionHeader">
+						<h2><span>Folder</span>美拍管理</h2>
+					</div>
+					<div class="accordionContent">
+						<ul class="tree treeFolder">
+							<li><a href="<{:U('Pai/index')}>" target="navTab" rel="index" title="待审核管理" >待审核管理</a></li>
+							<li><a href="<{:U('Pai/pass')}>" target="navTab" rel="pass" title="审核通过" >审核通过</a></li>
+							<li><a href="<{:U('Pai/nopass')}>" target="navTab" rel="nopass" title="审核未通过" >审核未通过</a></li>
+							<li><a href="<{:U('Pai/rubbish')}>" target="navTab" rel="pairubbish" title="回收站" >回收站</a></li>
+						</ul>
+					</div>
+
 					<!-- 坐标管理 -->
 					<div class="accordionHeader">
 						<h2><span>Folder</span>坐标管理</h2>
@@ -202,16 +223,6 @@ $(function(){
 						<ul class="tree treeFolder">
 							<li><a href="<{:U('Zuobiao/index')}>" target="navTab" rel="zuobiao" title="坐标管理" >坐标管理</a></li>
 							<li><a href="<{:U('Zuobiao/rubbish')}>" target="navTab" rel="rubbish" title="坐标回收站" >坐标回收站</a></li>
-						</ul>
-					</div>
-					<!-- 图片管理 -->
-					<div class="accordionHeader">
-						<h2><span>Folder</span>图片管理</h2>
-					</div>
-					<div class="accordionContent">
-						<ul class="tree treeFolder">
-							<li><a href="<{:U('Picture/index')}>" target="navTab" rel="zuobiao" title="图片管理" >图片管理</a></li>
-							<li><a href="<{:U('Picture/rubbish')}>" target="navTab" rel="rubbish" title="图片回收站" >图片回收站</a></li>
 						</ul>
 					</div>
 					<!-- 服务管理 -->
@@ -234,6 +245,15 @@ $(function(){
 							<li><a href="<{:U('Database/index',array('type'=>'import'))}>" target="navTab" rel="listdb" title="数据库还原" >数据库还原</a></li>
 							<li><a href="<{:U('System/updateSystemCache')}>" target="dialog" rel="listsystem" title="更新系统缓存" >更新系统缓存</a></li>
 							<li><a href="<{:U('System/updateTplCache')}>" target="dialog" rel="listsystem" title="更新模版缓存" >更新模版缓存</a></li>
+						</ul>
+					</div>
+					<!-- 资源管理 -->
+					<div class="accordionHeader">
+						<h2><span>Folder</span>打包管理</h2>
+					</div>
+					<div class="accordionContent">
+						<ul class="tree treeFolder">
+							<li><a href="<{:U('Archive/index')}>" target="navTab" rel="archive" title="资源文件列表" >资源文件列表</a></li>
 						</ul>
 					</div>
 				</div>

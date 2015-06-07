@@ -1,4 +1,4 @@
-<include file="Public:pagerForm" />
+<include file="Public:rubbishPagerForm" />
 <div class="pageHeader">
 	<form rel="pagerForm" onsubmit="return navTabSearch(this);" method="post">
 	<input type="hidden" name="numPerPage" value="<{$numPerPage}>" /><!--每页显示多少条-->
@@ -29,6 +29,10 @@
 			<tr>
 			    <th width="10"><input type="checkbox" group="ids[]" class="checkboxCtrl">ID</th>
 				<th width="30">行程标题</th>
+				<th width="30">行程类型</th>
+				<th width="40">行程天数(人)</th>
+				<th width="40">行程人数(天)</th>
+				<th width="40">行程里程(公里)</th>
 				<th width="40">发布时间</th>
 				<th width="40">发布者</th>
 				<th width="30">操作</th>
@@ -36,13 +40,21 @@
 		</thead>
 		<tbody>
 			<foreach name="list" item="vo">
-				<tr target="item_id" rel="<{$vo.id}>">
-				    <td><input name="ids[]" value="<{$vo['id']}>" type="checkbox"><{$vo.id}></td>
-					<td><{$vo.title}></td>
-					<td><{$vo.updatetime|date="Y-m-d H:m:s",###}></td>
-					<td><{$vo.username}></td>
-					<td><{$vo.islock|xingrubbish=$vo['id']}></td>
-				</tr>
+				<foreach name="xinglist" item="xingvo">
+					<if condition="$vo['xt_id'] eq $xingvo['id']">
+						<tr target="item_id" rel="<{$vo.id}>">
+						    <td><input name="ids[]" value="<{$vo['id']}>" type="checkbox"><{$vo.id}></td>
+							<td><{$vo.title}></td>
+							<td><{$xingvo.name}></td>
+							<td><{$vo.num}></td>
+							<td><{$vo.day}></td>
+							<td><{$vo.licheng}></td>
+							<td><{$vo.updatetime|date="Y-m-d H:m:s",###}></td>
+							<td><{$vo.username}></td>
+							<td><{$vo.islock|xingrubbish=$vo['id']}></td>
+						</tr>
+					</if>
+				</foreach>
 			</foreach>
 		</tbody>
 	</table>

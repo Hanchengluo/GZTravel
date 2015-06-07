@@ -16,24 +16,22 @@
 				<dt>活动标题：</dt>
 				<dd><input type="text" class="required"  style="width:100%" name="name"/></dd>
 			</dl>
-			<dl  class="nowrap">
-				<dt>活动内容：</dt>
+			<dl class="nowrap">
+				<dt>活动简介：</dt>
 				<dd>
-					<textarea id="elm2" name="special"  style="width:100%;display: none;" rows="15" >
-					</textarea>
-					<script>
-						$('#elm2').xheditor({tools:'Fullscreen',upLinkUrl:"__URL__/upload",upLinkExt:"zip,rar,txt",upImgUrl:"__URL__/upload",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"__URL__/upload",upFlashExt:"swf",upMediaUrl:"__URL__/upload",upMediaExt:"avi",urlBase:'__ROOT__/'});
-					</script>
+				<textarea class="required" rows = "10" style="width:95%" name="jianjie"></textarea>
 				</dd>
 			</dl>
-		<dl>
-			<dt>活动图片：</dt>
-			<dd>
-			<input type="hidden"  id="picurl" name="picurl"/>
-			<input id="picurl1" type="text"  readonly="readonly" style="width:70%" name="orgLookup.filedir" suggestFields="filedir" lookupGroup="orgLookup"/>
-			<a class="btnLook" href="__URL__/uploadAdd" width="400" height="400" rel="fileadd" lookupgroup="orgLookup"></a>
-			</dd>
-        </dl>
+<!--			<dl  class="nowrap">
+				<dt>活动内容：</dt>
+				<dd>
+					<textarea id="elm1_activity_add" name="special"  style="width:100%;display: none;" rows="15" >
+					</textarea>
+					<script>
+						$('#elm1_activity_add').xheditor({upLinkUrl:"__URL__/uploadAll",upLinkExt:"zip,rar,txt",upImgUrl:"__URL__/uploadAll",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"__URL__/uploadAll",upFlashExt:"swf",upMediaUrl:"__URL__/uploadAll",upMediaExt:"avi",urlBase:'__ROOT__/'});
+					</script>
+				</dd>
+			</dl>-->
         <dl>
 			<dt>是否推荐：</dt>
 			<dd>
@@ -48,6 +46,14 @@
 			<dt>结束时间：</dt>
 			<dd><input id="timepicker2" type="text" class="required"  style="width:70%" name="enddate" />   </dd>
 		</dl>
+		<dl>
+			<dt>详情图片：</dt>
+			<dd>
+				<input type="hidden"  id="picurl" name="picurl"/>
+				<input id="picurl1" type="text"  readonly="readonly" style="width:70%" name="orgLookup.filedir" suggestFields="filedir" lookupGroup="orgLookup"/>
+				<a class="btnLook" href="__URL__/uploadAdd/type/picture" width="400" height="400" rel="fileadd" lookupgroup="orgLookup"></a>
+			</dd>
+		</dl>
 		<script>
 				$('#timepicker1').datetimepicker({
 					timepicker:false,
@@ -58,10 +64,10 @@
 					timepicker:false,
 					format:'Y/m/d'
 				});
-
-			function setValue() {
+				function setValue() {
 					$('#picurl').val($('#picurl1').val());
 				}
+
 		</script>
 	</div>
 		<div class="formBar">

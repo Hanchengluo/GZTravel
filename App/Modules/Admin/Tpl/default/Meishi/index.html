@@ -16,12 +16,34 @@
 	</div>
 	</form>
 </div>
+<script>
+	function updateSort(obj){
+		$id=$(obj).attr('name');
+		$value=$(obj).attr('value');
+		$.post('__URL__/update/navTabId/meishi/callbackType/closeCurrent' , {'id':$id,'sort':$value} , function(){
+			$(obj).html($value);
+		});
+		navTabPageBreak();
+	}
+
+	function updateLock(id,num){
+		$.post('__URL__/lock/navTabId/meishi/callbackType/closeCurrent',{'id':id,'islock':num},function(data){
+			if (data) {
+				navTabPageBreak();
+			};
+		});
+	}
+</script>
 <div class="pageContent">
 	<div class="panelBar">
 		<ul class="toolBar">
 			<li><a class="add" href="__URL__/add" width="630" height="500"  title="添加美食" target="navTab" rel="msadd"><span>添加美食</span></a></li>
 			<li><a class="edit" href="__URL__/edit/id/{item_id}"  width="630" height="500" title="修改美食" target="navTab" rel="msedit"><span>修改美食</span></a></li>
-			<li><a class="delete" href="__URL__/delete/id/{item_id}/navTabId/meishi" target="ajaxTodo" title="确定要删除吗?"><span>删除</span></a></li>	
+			<li><a class="delete" href="__URL__/delete/id/{item_id}/navTabId/meishi" target="ajaxTodo" title="确定要删除吗?"><span>删除美食</span></a></li>
+			<li class="line">line</li>	
+			<li><a class="add" href="__URL__/addPicture/id/{item_id}"  width="630" height="500" title="添加图片" target="dialog" rel="addpicture"><span>添加图片</span></a></li>
+			<li><a class="edit" href="__URL__/photos/id/{item_id}" target="dialog" width="630" height="500" rel="yulanphotos" title="<h1 style='color:red;'>温馨提示：双击当前图片可以删除图片</h1>"><span>预览图片</span></a></li>
+			<li><a class="edit" href="__URL__/yinyue/id/{item_id}" target="dialog" width="630" height="500" rel="yulanvideo" title="预览"><span>预览音频</span></a></li>	
 			<li class="line">line</li>
 			<li><a class="icon"  href="javascript:navTabPageBreak();"><span>刷新</span></a></li>	
 		</ul>
@@ -33,8 +55,9 @@
 				<th>美食名称</th>
 				<th>隶属吃地</th>
 				<th>音频地址</th>
-				<th>是否推荐</th>
-				<th>状态</th>
+				<!-- <th>是否推荐</th> -->
+				<th>排序</th>
+				<!--<th>状态</th>-->
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -47,24 +70,16 @@
 					<td width="70" align="center"><{$vo.name}></td>
 					<td width="70" align="center"><{$chivo.name}></td>
 					<td width="50" align="center"><{$vo.videourl}></td>
-					<td width="40" align="center"><{$vo.recommend|isok=###}></td>
-					<td width="30" align="center"><{$vo.islock|islock=###}></td>
+					<!-- <td width="40" align="center"><{$vo.recommend|isok=###}></td> -->
+					<td width="40" align="center"><input onblur="updateSort(this);" type="text" style="width:30px;border:0;" name="<{$vo.id}>" value="<{$vo.sort}>"></td>
+					<!--<td width="30" align="center"><{$vo.islock|islock=###}></td>-->
 					<td width="30" align="center">
 
-<script>
-function updateLock(id,num){
-	$.post('__URL__/lock/navTabId/meishi/callbackType/closeCurrent',{'id':id,'islock':num},function(data){
-		if (data) {
-			navTabPageBreak();
-		};	
-	});	
-}
-</script>
 						<if condition="$vo.islock eq 1">
-								<a href="javascript:void(0);" onclick="updateLock(<{$vo.id}>,0);">解锁</a>
+								<a href="javascript:void(0);" onclick="updateLock(<{$vo.id}>,0);">显示</a>
 						<else/>
 							<if condition="$vo['username']==admin">无法锁定<else/>
-								<a href="javascript:void(0);" onclick="updateLock(<{$vo.id}>,1);">锁定</a>
+								<a href="javascript:void(0);" onclick="updateLock(<{$vo.id}>,1);">隐藏</a>
 							</if>
 						</if>
 					</td>

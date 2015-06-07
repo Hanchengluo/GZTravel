@@ -12,8 +12,11 @@ class XingAction extends CommonAction{
 		}
 		$map['islock']=0;
 		$model = M('Xing');
+		$m = M('Xingtype');
+		$xinglist = $m->where($map)->select();
+		$this->assign('xinglist',$xinglist);
 		if (!empty($model)) {
-			$this->_list($model, $map);
+			$this->_list($model, $map, 'sort');
 		}
 		$this->display();
 		return;
@@ -26,9 +29,13 @@ class XingAction extends CommonAction{
 			$this->_filter($map);
 		}
 		$map['islock']=1;
+		$data['islock']=0;
 		$model = M('Xing');
+		$m = M('Xingtype');
+		$xinglist = $m->where($data)->select();
+		$this->assign('xinglist',$xinglist);
 		if (!empty($model)) {
-			$this->_list($model, $map);
+			$this->_list($model, $map,'sort');
 		}
 		$this->display();
 		return;
@@ -47,26 +54,119 @@ class XingAction extends CommonAction{
 		$data['islock']=0;
 		$aslist=$m->where($data)->select();
 		$this->assign('aslist',$aslist);
+		$zblglist = M('Zhu')->where($data)->getField('id,name');
+		$this->assign('zblglist',$zblglist);
+		$zbcylist = M('Chi')->where($data)->getField('id,name');
+		$this->assign('zbcylist',$zbcylist);
+		$zbsdlist = M('Shop')->where($data)->getField('id,name');
+		$this->assign('zbsdlist',$zbsdlist);
+		$zbjqlist = M('Jingqu')->where($data)->getField('id,name');
+		$this->assign('zbjqlist',$zbjqlist);
 		$this->display(add);
 		return;
 	}
 	
-	public function insert(){
+	public function addPicture() {
+		$model1 = M('Areaservice');
+		$data['name'] = '行';
+		$asid = $model1->where($data)->getField('id');
 		$model = M('Xing');
-		$Xing=array(
-				'title'=>I('title'),
-				'comment'=>I('comment'),
-				'xt_id'=>I('xt_id'),
-				'picurl'=>I('picurl'),
-				'username'=>$_SESSION[C('ADMIN_AUTH_KEY_B')],
-				'updatetime'=>time()
-			);
+		$pid = $_REQUEST[$model->getPk()];
+		$this->assign('pid', $pid);
+		$this->assign('asid', $asid);
+		$this->display('Public/addPhoto');
+	}
+
+	public function savePic() {
+		$model = M('Picture');
+		unset ( $_POST [$model->getPk()] );
 		
 		if (false === $model->create()) {
 			$this->error($model->getError());
 		}
+		$total = $_REQUEST['total'];
+		$as_id = $_REQUEST['as_id'];
+		$pid = $_REQUEST['pid'];
+
+		for ($i = 0; $i < $total; $i++) 
+		{ 
+			$data[$i]['pid'] = $pid;
+			$data[$i]['as_id'] = $as_id;
+			$data[$i]['picurl'] = $_REQUEST['picurl'.$i.''];
+		} 
+
 		//保存当前数据对象
-		if ($result = $model->add($Xing)){ //保存成功
+		if ($result = $model->addAll($data)) { //保存成功
+			// 回调接口
+			if (method_exists($this, '_tigger_insert')) {
+				$model->id = $result;
+				$this->_tigger_insert($model);
+			}
+			
+			//成功提示
+			$this->success(L('新增成功'));
+		} else {
+			//失败提示
+			$this->error(L('新增失败').$model->getLastSql());
+		}
+	}
+
+
+	public function savePhotos() {
+		$model = M('Picture');
+		unset ( $_POST [$model->getPk()] );
+
+		$data['pid'] = $_POST['pid'];
+		$data['as_id'] = $_POST['as_id'];
+
+		//保存当前数据对象
+		if ($_POST['picurl']) {
+			$res1 = $model->where(array('pid' => $_POST['pid'], 'as_id' => $_POST['as_id']))->find();
+			if ($res1['id']) {
+				$data['picurl'] = $_POST['picurl'];
+				$result = $model->where(array('id' => $res1['id']))->save($data);
+			} else {
+				$data['picurl'] = $_POST['picurl'];
+				$result = $model->add($data);
+			}
+		}
+
+		if ($_POST['minurl']) {
+			$res2 = $model->where(array('pid' => $_POST['pid'], 'as_id' => $_POST['as_id']))->find();
+			if ($res2['id']) {
+				$data['minurl'] = $_POST['minurl'];
+				$result = $model->where(array('id' => $res2['id']))->save($data);
+			} else {
+				$data['minurl'] = $_POST['minurl'];
+				$result = $model->add($data);
+			}
+		}
+
+		if ($result) { //保存成功
+			//成功提示
+			$this->success(L('更新成功'));
+		} else {
+			//失败提示
+			$this->error(L('更新失败').$model->getLastSql());
+		}
+	}
+
+	
+	public function insert(){
+
+		$_POST['updatetime'] = time();
+		$_POST['username'] = $_SESSION[C('ADMIN_AUTH_KEY_B')];
+		$_POST['zblg'] = implode(",",$_POST['zblg']);
+		$_POST['zbcy'] = implode(",",$_POST['zbcy']);
+		$_POST['zbsd'] = implode(",",$_POST['zbsd']);
+		$_POST['zbjq'] = implode(",",$_POST['zbjq']);
+		$_POST['jianjie'] = strip_tags($_POST['jianjie']);
+		$model = M('Xing');
+		if (false === $model->create()) {
+			$this->error($model->getError());
+		}
+		//保存当前数据对象
+		if ($result = $model->add()){ //保存成功
 			// 回调接口
 			if (method_exists($this, '_tigger_insert')) {
 				$model->id = $result;
@@ -92,23 +192,34 @@ class XingAction extends CommonAction{
 		$data['islock']=0;
 		$aslist=$m->where($data)->select();
 		$this->assign('aslist',$aslist);
+		$zblglist = M('Zhu')->where($data)->getField('id,name');
+		$this->assign('zblglist',$zblglist);
+		$zbcylist = M('Chi')->where($data)->getField('id,name');
+		$this->assign('zbcylist',$zbcylist);
+		$zbsdlist = M('Shop')->where($data)->getField('id,name');
+		$this->assign('zbsdlist',$zbsdlist);
+		$zbjqlist = M('Jingqu')->where($data)->getField('id,name');
+		$this->assign('zbjqlist',$zbjqlist);
 		$this->display(edit);
 	}
 	
 
 	public function update() {
+		$_POST['updatetime'] = time();
+		$_POST['username'] = $_SESSION[C('ADMIN_AUTH_KEY_B')];
+		$_POST['zblg'] = implode(",",$_POST['zblg']);
+		$_POST['zbcy'] = implode(",",$_POST['zbcy']);
+		$_POST['zbsd'] = implode(",",$_POST['zbsd']);
+		$_POST['zbjq'] = implode(",",$_POST['zbjq']);
+		$_POST['jianjie'] = strip_tags($_POST['jianjie']);
 		$model = M('Xing');
+
 		if(false === $model->create()) {
 			$this->error($model->getError());
 		}
-	    $data['id'] = I('id');
-		$data['title'] = I('title');
-		$data['comment'] = I('comment');
-		$data['xt_id'] = I('xt_id');
-		$data['picurl'] = I('picurl');
-		$data['updatetime'] = time();
+
 		// 更新数据
-		if(false !== $model->save($data)) {
+		if(false !== $model->save()) {
 			// 回调接口
 			if (method_exists($this, '_tigger_update')) {
 				$this->_tigger_update($model);
@@ -121,28 +232,60 @@ class XingAction extends CommonAction{
 		}
 	}
 
-	public function uploadAdd() {
-		$this->display('upload');
+	public function photos() {
+		$model = M('Xing');
+		$pid = $_REQUEST[$model->getPk()];
+		$model1 = M('Areaservice');
+		$data['name'] = '行';
+		$asid = $model1->where($data)->getField('id');
+		$model2 = M('Picture');
+		$map['pid'] = $pid;
+		$map['as_id'] = $asid;
+        $volist = $model2->where($map)->select();
+		$this->assign('volist', $volist);
+		$this->display('Public/photo');
 	}
-	
-	public function upload(){
-		//设置上传目录		
-		$upFilePath="./Uploads/Xing/picture/";
-		$file_name = $_FILES['pic']['name'];
-		$file_tmp_name = $_FILES['pic']['tmp_name'];
-		if(!is_dir($upFilePath)){
-			mkdir($upFilePath,0777,true);
-		}
-		$info = pathinfo($file_name);
-        $extend = $info['extension'];
-		$fileName = date("YmdHis").rand(100,999).'.'.$extend;
-		$file=@move_uploaded_file($file_tmp_name,$upFilePath.$fileName);  
 
-		if($file === FALSE){
-			echo json_encode(array('code'=>'1','message'=>'上传失败','file_url'=>$upFilePath.$fileName));
-		}else{
-			echo json_encode(array('code'=>'0','message'=>'上传成功','file_url'=>$upFilePath.$fileName));
+	public function deletePic() {
+		//删除指定记录
+		$model = M('Picture');
+		if (!empty($model)) {
+			$id = $_POST['id'];
+			if (isset($id)) {
+				$res = substr($id, strlen($id) - 1);
+				$data['id'] = $id;
+				if ($res == 's') {
+					$picurl = 'minurl';
+				} else {
+					$picurl = 'picurl';
+				}
+				$data['id'] = $id;
+				$url = $model->where($data)->getField($picurl);
+				if (false !== $model->where($data)->setField($picurl,null)) {
+					chmod($url,0777);
+					@unlink($url);
+					$this->success(L('删除成功'));
+				} else {
+					$this->error(L('删除失败'));
+				}
+			} else {
+				$this->error('非法操作');
+			}
 		}
+	}
+
+	public function uploadAdd() {
+		$type = $_REQUEST['type'];
+		$this->assign('type', $type);
+		$this->display('Public/upload');
+	}
+
+
+	public function upload(){
+		//设置上传目录
+		$type = $_POST['type'];		
+		$upFilePath = "./Uploads/Xing/".$type."/";
+		$this -> uploadPic($upFilePath);
 	}
 	
    public function rubAll(){
@@ -150,8 +293,8 @@ class XingAction extends CommonAction{
 		$model = M($name);
     	$pk=$model->getPk ();  
 		$data[$pk]=array('in', $_POST['ids']);
-		$data1['islock']=1;
-		$model->where($data)->save($data1);
+		$data['islock']=1;
+		$model->where($data)->save($data);
 		$this->success('更新成功');
 	}
 
@@ -293,8 +436,7 @@ class XingAction extends CommonAction{
 		$this->assign('sortImg', $sortImg);
 		$this->assign('sortType', $sortAlt);
 		$this->assign("page", $page);
-		
-		$this->assign("search",			$search);			//搜索类型
+
 		$this->assign("values",			$_POST['values']);	//搜索输入框内容
 		$this->assign("totalCount",		$count);			//总条数
 		$this->assign("numPerPage",		$p->listRows);		//每页显多少条

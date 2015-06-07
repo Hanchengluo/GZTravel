@@ -5,6 +5,7 @@
  */
 
 class AdminAction extends CommonAction{
+	
 	public function index() {
 		$map = $this->_search('admin');
 		if(method_exists($this, '_filter')) {

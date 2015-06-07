@@ -24,32 +24,30 @@
 	<form method="post" action="__URL__/insert/navTabId/service/callbackType/closeCurrent"  class="pageForm required-validate" 
 		onsubmit="return validateCallback(this,dialogAjaxDone);"><?php  //窗体组件采用这个 iframeCallback(this, navTabAjaxDone); ?>
 		<div class="pageFormContent" width="100%" layoutH="60">
-			<dl>
-				<dt>服务名：</dt>
-				<dd><input type="text" class="required"  style="width:100%" name="name"/></dd>
-			</dl>
-			<dl>
-
-			<dl style="width:500px;">
-				<dt>等级级别:</dt>
-				<dd style="width:300px">
-					<select name="level">
-						<option value="">请选择级别</option>
-					    <option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-					</select>
-				</dd>
-			</dl>
-			<dl style="width:500px;">
-			<dt>所属上级:</dt>
-			<select name="pid">
-				<foreach name="aslist" item="vo">
-					<option value="<{$vo.id}>" ><{$vo.name}></option>
+		<dl>
+			<dt>服务级别:</dt>
+			<dd>
+			<select class="combox required" name="level" style="width:100%;" ref="pid" refUrl="__URL__/getLevel/level/{value}">
+				<option value="2" selected="selected">一级级别</option>
+				<option value="3" >二级级别</option>
+			</select>
+			</dd>
+		</dl>
+		<dl>
+			<dt>所属类别:</dt>
+			<dd>
+			<select class="combox required" name="pid" style="width:100%;" id="pid">
+				<foreach name="aslist" item="volist">
+					<option value="<{$volist.id}>"><{$volist.name}></option>
 				</foreach>
 			</select>
 			</dd>
+		</dl>
+		<dl>
+			<dt>服务名：</dt>
+			<dd><input type="text" class="required"  style="width:100%" name="name"/></dd>
 			</dl>
+		<dl>
 			<p id="last"></p>
 		</div>
 		

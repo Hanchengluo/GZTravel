@@ -46,10 +46,28 @@ class ZuobiaoAction extends CommonAction{
 	public function add(){
 		$m=M('Areaservice');
 		$data['level']=2;
-		$data['is_lock']=0;
+		$data['islock']=0;
 		$aslist=$m->where($data)->select();
 		$this->assign('aslist',$aslist);
 		$this->display(add);
+	}
+
+	public function getLevel(){
+		$m=M('Areaservice');
+		$data['level']=$_REQUEST['level'];
+		$data['islock']=0;
+		$aslist = $m->where($data)->getField('id,name',true);
+		$list = "[";
+		foreach ($aslist as $key => $value) {
+			if ($value == "美食" ||  $value == "特产") {
+				continue;
+			}
+			$list = $list."[\"".$key."\",\"".$value."\"],";
+		}
+		$list = substr($list, 0,strlen($list)-1);
+		$list = $list."]";
+		echo $list;
+		exit;
 	}
 	
 	public function insert(){
@@ -60,6 +78,8 @@ class ZuobiaoAction extends CommonAction{
 				'pointlat'=>I('pointlat'),
 				'bpointlng'=>I('bpointlng'),
 				'bpointlat'=>I('bpointlat'),
+				'address'=>I('address'),
+				'picurl' => I('picurl'),
 				'as_id'=>I('as_id')
 			);
 		
@@ -88,9 +108,12 @@ class ZuobiaoAction extends CommonAction{
 		$model = M('Zuobiao');
 		$id = $_REQUEST[$model->getPk()];
 		$vo = $model->find($id);
-		$this->assign('vo', $vo);
 		$m=M('Areaservice');
-		$data['level']=2;
+		$vo['level']=$m->where(array('id' => $vo['as_id']))->getField('level');
+		$this->assign('vo', $vo);
+		
+		$data['level']=$vo['level'];
+		$data['islock']=0;
 		$aslist=$m->where($data)->select();
 		$this->assign('aslist',$aslist);
 		$this->display(edit);
@@ -108,6 +131,8 @@ class ZuobiaoAction extends CommonAction{
 		$data['pointlat'] = I('pointlat');
 		$data['bpointlng'] = I('bpointlng');
 		$data['bpointlat'] = I('bpointlat');
+		$data['address'] = I('address');
+		$data['picurl'] = I('picurl');
 		$data['as_id'] = I('as_id');
 		// 更新数据
 		if(false !== $model->save($data)) {
@@ -168,6 +193,29 @@ class ZuobiaoAction extends CommonAction{
 		}
 	}
 
+	public function uploadAdd() {
+		$type = $_REQUEST['type'];
+		$this->assign('type', $type);
+		$this->display('Public/upload');
+	}
+
+	//上传图片
+	public function upload(){
+		//设置上传目录
+		$type = $_POST['type'];
+		$upFilePath = "./Uploads/Zuobiao/".$type."/";
+		$this -> uploadPic($upFilePath);
+	}
+
+	public function photos() {
+		$model = M('Zuobiao');
+		$map['id'] = $_GET['id'];
+
+		$map['islock'] = 0;
+		$volist = $model->where($map)->select();
+		$this->assign('volist', $volist);
+		$this->display('Public/photo');
+	}
 	/**
 	 * 根据表单生成查询条件
 	 * 进行列表过滤

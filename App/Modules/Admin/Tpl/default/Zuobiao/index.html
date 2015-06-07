@@ -19,10 +19,11 @@
 <div class="pageContent">
 	<div class="panelBar">
 		<ul class="toolBar">
-			<li><a class="add" href="__URL__/add" target="dialog" width="800" height="500" rel="zuobiao" title="添加"><span>添加</span></a></li>
-			<li><a class="edit" href="__URL__/edit/id/{item_id}"  width="800" height="500" target="dialog"><span>修改</span></a></li>
+			<li><a class="add" href="__URL__/add" target="dialog" width="1000" height="600" rel="zuobiao" title="添加"><span>添加</span></a></li>
+			<li><a class="edit" href="__URL__/edit/id/{item_id}"  width="1000" height="600" rel="zuobiaoedit" target="dialog"><span>修改</span></a></li>
 			<li><a  target="selectedTodo" target="dialog" rel="ids[]" href="__URL__/rubAll" class="delete" ><span>批量放入回收站</span></a></li>	
 			<li class="line">line</li>
+			<li><a class="edit" href="__URL__/photos/id/{item_id}" target="dialog" width="630" height="500" rel="yulanphotos" title="<h1 style='color:red;'>温馨提示：更换照片请编辑重新上传图片</h1>"><span>预览图片</span></a></li>
 			<li><a class="icon"  href="javascript:navTabPageBreak();"><span>刷新</span></a></li>	
 		</ul>
 	</div>
@@ -35,6 +36,7 @@
 				<th width="30">原始纬度</th>
 				<th width="30">百度经度</th>
 				<th width="30">百度纬度</th>
+				<th width="30">地址信息</th>
 				<th width="30">操作</th>
 			</tr>
 		</thead>
@@ -47,6 +49,7 @@
 					<td><{$vo.pointlat}></td>
 					<td><{$vo.bpointlng}></td>
 					<td><{$vo.bpointlat}></td>
+					<td><{$vo.address}></td>
 					<td><{$vo.islock|crubbish=$vo['id']}></td>
 				</tr>
 			</foreach>

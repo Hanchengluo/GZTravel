@@ -1,0 +1,55 @@
+2015-04-22 00:48:05: ----- ：任务 'Long'：计算机 'SZL-PC' 上的分析操作已由 User 所启动 (GoodSync v 9.5.5.5) -----
+2015-04-22 00:48:05: D:\Program Files\xampp\htdocs\GZTravel\App\Modules\Index\Action <-> ftp://meeting.dingxinsoft.net:50004/GZTravel/App/Modules/Index/Action
+2015-04-22 00:48:05: 左侧: State file does not exist: D:\Program Files\xampp\htdocs\GZTravel\App\Modules\Index\Action\_gsdata_\_file_state._gs
+2015-04-22 00:48:05: 左侧: 未发现状态文件，新建状态文件
+2015-04-22 00:48:05: 左侧：文件： 14 (已排除 )。文件夹：  (已排除 )。 D: NTFS, 可用空间：15.0 GB，总计空间：80.0 GB
+2015-04-22 00:48:05: 右侧: State file does not exist: ftp://meeting.dingxinsoft.net:50004/GZTravel/App/Modules/Index/Action/_gsdata_/_file_state._gs
+2015-04-22 00:48:05: 右侧: 未发现状态文件，新建状态文件
+2015-04-22 00:48:05: 右侧：文件： 14 (已排除 )。文件夹：  (已排除 )。 FTP: FileZilla Server version 0.9.48 betawritten by Tim Kosse (tim.kosse@filezilla-project.org)Please visit https://filezilla-project ...
+2015-04-22 00:48:05: /ActivityAction.class.php: 冲突: 新文件有变化
+2015-04-22 00:48:05: /ArchiveAction.class.php: 冲突: 新文件有变化
+2015-04-22 00:48:05: /ArticleAction.class.php: 冲突: 新文件有变化
+2015-04-22 00:48:05: /CommentAction.class.php: 冲突: 新文件有变化
+2015-04-22 00:48:05: /CommonAction.class.php: 冲突: 新文件有变化
+2015-04-22 00:48:05: /EmptyAction.class.php: 冲突: 新文件有变化
+2015-04-22 00:48:05: /IndexAction.class.php: 冲突: 新文件有变化
+2015-04-22 00:48:05: /ListAction.class.php: 冲突: 新文件有变化
+2015-04-22 00:48:05: /LoginAction.class.php: 冲突: 新文件有变化
+2015-04-22 00:48:05: /NewsAction.class.php: 冲突: 新文件有变化
+2015-04-22 00:48:05: /PaiAction.class.php: 冲突: 新文件有变化
+2015-04-22 00:48:05: /ReasonAction.class.php: 冲突: 新文件有变化
+2015-04-22 00:48:05: /SearchAction.class.php: 冲突: 新文件有变化
+2015-04-22 00:48:05: /WeatherAction.class.php: 冲突: 新文件有变化
+2015-04-22 00:48:05: 分析完毕并发现冲突情况。如需解决冲突请选择正常的同步方向。
+2015-04-22 00:48:05: 变更：14， 冲突：14， 复制时间：， 复制状态：/， 错误： 
+2015-04-22 00:48:05: ----- ：分析已结束。 历时 00:00:01， 速度： 14 个文件/秒 -----
+2015-04-22 00:48:05: 
+2015-04-22 00:48:12: Done.
+2015-04-22 00:48:16: Done.
+2015-04-22 00:48:16: Done.
+2015-04-22 00:48:26: === User Changed Action from 'CONFLICT' to 'COPY_LEFT_TO_RIGHT' on item /ActivityAction.class.php
+2015-04-22 00:48:26: Done.
+2015-04-22 00:48:35: === User Changed Action from 'CONFLICT' to 'COPY_LEFT_TO_RIGHT' on item /NewsAction.class.php
+2015-04-22 00:48:35: Done.
+2015-04-22 00:49:03: New _gsdata_ folder(s) created, so rescan all job folders for their ghosts
+2015-04-22 00:49:03: ===== ：任务 'Long'：同步已被 User 所启动，位于计算机 'SZL-PC' =====
+2015-04-22 00:49:03: D:\Program Files\xampp\htdocs\GZTravel\App\Modules\Index\Action <-> ftp://meeting.dingxinsoft.net:50004/GZTravel/App/Modules/Index/Action
+2015-04-22 00:49:04: 覆盖复制 'D:\Program Files\xampp\htdocs\GZTravel\App\Modules\Index\Action\ActivityAction.class.php' -> 'ftp://meeting.dingxinsoft.net:50004/GZTravel/App/Modules/Index/Action/ActivityAction.class.php' (User Action)
+2015-04-22 00:49:04: /ArchiveAction.class.php: unresolved conflict results in No Copy
+2015-04-22 00:49:04: /ArticleAction.class.php: unresolved conflict results in No Copy
+2015-04-22 00:49:04: /CommentAction.class.php: unresolved conflict results in No Copy
+2015-04-22 00:49:04: /CommonAction.class.php: unresolved conflict results in No Copy
+2015-04-22 00:49:04: /EmptyAction.class.php: unresolved conflict results in No Copy
+2015-04-22 00:49:04: /IndexAction.class.php: unresolved conflict results in No Copy
+2015-04-22 00:49:04: /ListAction.class.php: unresolved conflict results in No Copy
+2015-04-22 00:49:04: /LoginAction.class.php: unresolved conflict results in No Copy
+2015-04-22 00:49:05: 覆盖复制 'D:\Program Files\xampp\htdocs\GZTravel\App\Modules\Index\Action\NewsAction.class.php' -> 'ftp://meeting.dingxinsoft.net:50004/GZTravel/App/Modules/Index/Action/NewsAction.class.php' (User Action)
+2015-04-22 00:49:05: /PaiAction.class.php: unresolved conflict results in No Copy
+2015-04-22 00:49:05: /ReasonAction.class.php: unresolved conflict results in No Copy
+2015-04-22 00:49:05: /SearchAction.class.php: unresolved conflict results in No Copy
+2015-04-22 00:49:05: /WeatherAction.class.php: unresolved conflict results in No Copy
+2015-04-22 00:49:05: 保存状态文件 ftp://meeting.dingxinsoft.net:50004/GZTravel/App/Modules/Index/Action/_gsdata_/_file_state_v4._gs
+2015-04-22 00:49:06: 同步完成，未解决的冲突数为 12 。点击冲突按钮即可查看未解决的冲突情况。
+2015-04-22 00:49:06: 项目同步未必： 2，错误： 
+2015-04-22 00:49:06: ===== ：同步完毕。时间：00:00:04，速度： 3.32 KB/s (3.07 KB/s) =====
+2015-04-22 00:49:06: 

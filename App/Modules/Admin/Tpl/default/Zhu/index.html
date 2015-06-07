@@ -16,12 +16,27 @@
 	</div>
 	</form>
 </div>
+<script>
+	function updateSort(obj){
+		$id=$(obj).attr('name');
+		$value=$(obj).attr('value');
+		$.post('__URL__/update/navTabId/zhu/callbackType/closeCurrent' , {'id':$id,'sort':$value} , function(){
+			$(obj).html($value);
+		});
+		navTabPageBreak();
+	}
+
+</script>
 <div class="pageContent">
 	<div class="panelBar">
 		<ul class="toolBar">
 			<li><a class="add" href="__URL__/add" width="630" height="500"  title="添加住地" target="navTab" rel="zhuadd"><span>添加住地</span></a></li>
 			<li><a class="edit" href="__URL__/edit/id/{item_id}"  width="630" height="500" title="修改住地" target="navTab" rel="zhuedit"><span>修改住地</span></a></li>
-			<li><a class="delete" href="__URL__/delete/id/{item_id}/navTabId/zhu" target="ajaxTodo" title="确定要删除吗?"><span>删除</span></a></li>	
+			<li><a class="delete" href="__URL__/delete/id/{item_id}/navTabId/zhu" target="ajaxTodo" title="确定要删除吗?"><span>删除住地</span></a></li>
+			<li class="line">line</li>	
+			<li><a class="add" href="__URL__/addPicture/id/{item_id}"  width="630" height="500" title="添加图片" target="dialog" rel="addpicture"><span>添加图片</span></a></li>
+			<li><a class="edit" href="__URL__/photos/id/{item_id}" target="dialog" width="630" height="500" rel="yulanphotos" title="<h1 style='color:red;'>温馨提示：双击当前图片可以删除图片</h1>"><span>预览图片</span></a></li>
+			<li><a class="edit" href="__URL__/yinyue/id/{item_id}" target="dialog" width="630" height="500" rel="yulanvideo" title="预览"><span>预览音频</span></a></li>	
 			<li class="line">line</li>
 			<li><a class="icon"  href="javascript:navTabPageBreak();"><span>刷新</span></a></li>	
 		</ul>
@@ -35,24 +50,28 @@
 				<th>电话</th>
 				<th>入住时间</th>
 				<th>退房时间</th>
-				<th>是否推荐</th>
-				<th>是否有网</th>
-				<th>状态</th>
+				<th>均价(元)</th>
+<!-- 				<th>是否推荐</th>
+				<th>是否有网</th> -->
+				<th>排序</th>
+				<!--<th>状态</th>-->
 				<th>操作</th>
 			</tr>
 		</thead>
 		<tbody>
 			<foreach name="list" item="vo">
-				<tr target="item_id" rel="<{$vo.id}>"  align="center">
+				<tr target="item_id" rel="<{$vo.id}>,<{$vo.as_id}>" align="center">
 					<td width="40" align="center"><{$vo.id}></td>
 					<td width="70" align="center"><{$vo.name}></td>	
 					<td width="90" align="center"><{$vo.address}></td>
 					<td width="90" align="center"><{$vo.tel}></td>
 					<td width="90" align="center"><{$vo.starttime}></td>
 					<td width="90" align="center"><{$vo.endtime}></td>
-					<td width="40" align="center"><{$vo.recommend|isok=###}></td>
-					<td width="50" align="center"><{$vo.isnet|isok=###}></td>
-					<td width="30" align="center"><{$vo.islock|islock=###}></td>
+					<td width="90" align="center"><{$vo.aveprice}></td>
+<!-- 					<td width="40" align="center"><{$vo.recommend|isok=###}></td>
+					<td width="50" align="center"><{$vo.isnet|isok=###}></td> -->
+					<td width="40" align="center"><input onblur="updateSort(this);" type="text" style="width:30px;border:0;" name="<{$vo.id}>" value="<{$vo.sort}>"></td>
+					<!--<td width="30" align="center"><{$vo.islock|islock=###}></td>-->
 					<td width="30" align="center">
 
 <script>
@@ -65,14 +84,15 @@ function updateLock(id,num){
 }
 </script>
 						<if condition="$vo.islock eq 1">
-								<a href="javascript:void(0);" onclick="updateLock(<{$vo.id}>,0);">解锁</a>
+								<a href="javascript:void(0);" onclick="updateLock(<{$vo.id}>,0);">显示</a>
 						<else/>
 							<if condition="$vo['username']==admin">无法锁定<else/>
-								<a href="javascript:void(0);" onclick="updateLock(<{$vo.id}>,1);">锁定</a>
+								<a href="javascript:void(0);" onclick="updateLock(<{$vo.id}>,1);">隐藏</a>
 							</if>
 						</if>
 					</td>
 				</tr>
+				
 			</foreach>
 		</tbody>
 	</table>

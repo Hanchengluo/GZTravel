@@ -38,46 +38,4 @@ if(!function_exists('smarty_mb_wordwrap')) {
 
                 if ($cut) {
                     $_tokens = preg_split('!(.{' . $width . '})!uS', $_token, -1, PREG_SPLIT_NO_EMPTY + PREG_SPLIT_DELIM_CAPTURE);
-                    // broken words go on a new line
-                    $t .= $break;
-                }
-            }
-
-            foreach ($_tokens as $token) {
-                $_space = !!preg_match('!^\s$!uS', $token);
-                $token_length = mb_strlen($token, SMARTY_RESOURCE_CHAR_SET);
-                $length += $token_length;
-
-                if ($length > $width) {
-                    // remove space before inserted break
-                    if ($_previous && $token_length < $width) {
-                        $t = mb_substr($t, 0, -1, SMARTY_RESOURCE_CHAR_SET);
-                    }
-
-                    // add the break before the token
-                    $t .= $break;
-                    $length = $token_length;
-
-                    // skip space after inserting a break
-                    if ($_space) {
-                        $length = 0;
-                        continue;
-                    }
-                } else if ($token == "\n") {
-                    // hard break must reset counters
-                    $_previous = 0;
-                    $length = 0;
-                } else {
-                    // remember if we had a space or not
-                    $_previous = $_space;
-                }
-                // add the token
-                $t .= $token;
-            }
-        }
-
-        return $t;
-    }
-
-}
-?>
+             

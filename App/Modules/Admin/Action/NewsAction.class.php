@@ -11,9 +11,12 @@ class NewsAction extends CommonAction{
 			$this->_filter($map);
 		}
 		$map['islock']=0;
-		$model = M('news');
+		$model = M('News');
+		$m = M('Newstype');
+		$newslist = $m->where($data)->select();
+		$this->assign('newslist',$newslist);
 		if (!empty($model)) {
-			$this->_list($model, $map);
+			$this->_list($model, $map, 'sort');
 		}
 		$this->display();
 		return;
@@ -27,6 +30,9 @@ class NewsAction extends CommonAction{
 		}
 		$map['islock']=1;
 		$model = M('news');
+		$m = M('Newstype');
+		$newslist = $m->where($data)->select();
+		$this->assign('newslist',$newslist);
 		if (!empty($model)) {
 			$this->_list($model, $map);
 		}
@@ -51,13 +57,97 @@ class NewsAction extends CommonAction{
 		return;
 	}
 	
+	public function addPicture() {
+		$model1 = M('Areaservice');
+		$data['name'] = '新闻';
+		$asid = $model1->where($data)->getField('id');
+		$model = M('News');
+		$pid = $_REQUEST[$model->getPk()];
+		$this->assign('pid', $pid);
+		$this->assign('asid', $asid);
+		$this->display('Public/addPhoto');
+	}
+
+	public function savePic() {
+		$model = M('Picture');
+		unset ( $_POST [$model->getPk()] );
+		
+		if (false === $model->create()) {
+			$this->error($model->getError());
+		}
+		$total = $_REQUEST['total'];
+		$as_id = $_REQUEST['as_id'];
+		$pid = $_REQUEST['pid'];
+
+		for ($i = 0; $i < $total; $i++) 
+		{ 
+			$data[$i]['pid'] = $pid;
+			$data[$i]['as_id'] = $as_id;
+			$data[$i]['picurl'] = $_REQUEST['picurl'.$i.''];
+		} 
+
+		//保存当前数据对象
+		if ($result = $model->addAll($data)) { //保存成功
+			// 回调接口
+			if (method_exists($this, '_tigger_insert')) {
+				$model->id = $result;
+				$this->_tigger_insert($model);
+			}
+			
+			//成功提示
+			$this->success(L('新增成功'));
+		} else {
+			//失败提示
+			$this->error(L('新增失败').$model->getLastSql());
+		}
+	}
+
+	public function savePhotos() {
+		$model = M('Picture');
+		unset ( $_POST [$model->getPk()] );
+
+		$data['pid'] = $_POST['pid'];
+		$data['as_id'] = $_POST['as_id'];
+
+		//保存当前数据对象
+		if ($_POST['picurl']) {
+			$res1 = $model->where(array('pid' => $_POST['pid'], 'as_id' => $_POST['as_id']))->find();
+			if ($res1['id']) {
+				$data['picurl'] = $_POST['picurl'];
+				$result = $model->where(array('id' => $res1['id']))->save($data);
+			} else {
+				$data['picurl'] = $_POST['picurl'];
+				$result = $model->add($data);
+			}
+		}
+
+		if ($_POST['minurl']) {
+			$res2 = $model->where(array('pid' => $_POST['pid'], 'as_id' => $_POST['as_id']))->find();
+			if ($res2['id']) {
+				$data['minurl'] = $_POST['minurl'];
+				$result = $model->where(array('id' => $res2['id']))->save($data);
+			} else {
+				$data['minurl'] = $_POST['minurl'];
+				$result = $model->add($data);
+			}
+		}
+
+		if ($result) { //保存成功
+			//成功提示
+			$this->success(L('更新成功'));
+		} else {
+			//失败提示
+			$this->error(L('更新失败').$model->getLastSql());
+		}
+	}
+
 	public function insert(){
 		$model = M('News');
 		$news=array(
 				'title'=>I('title'),
 				'comment'=>I('comment'),
 				'nt_id'=>I('nt_id'),
-				'picurl'=>I('picurl'),
+				'jianjie'=>I('jianjie'),
 				'username'=>$_SESSION[C('ADMIN_AUTH_KEY_B')],
 				'updatetime'=>time()
 			);
@@ -101,14 +191,14 @@ class NewsAction extends CommonAction{
 		if(false === $model->create()) {
 			$this->error($model->getError());
 		}
-	    $data['id'] = I('id');
+/*	    $data['id'] = I('id');
 		$data['title'] = I('title');
 		$data['comment'] = I('comment');
 		$data['nt_id'] = I('nt_id');
-		$data['picurl'] = I('picurl');
-		$data['updatetime'] = time();
+		$data['jianjie'] = I('jianjie');
+		$data['updatetime'] = time();*/
 		// 更新数据
-		if(false !== $model->save($data)) {
+		if(false !== $model->save()) {
 			// 回调接口
 			if (method_exists($this, '_tigger_update')) {
 				$this->_tigger_update($model);
@@ -121,30 +211,182 @@ class NewsAction extends CommonAction{
 		}
 	}
 
-	public function uploadAdd() {
-		$this->display('upload');
+	public function photos() {
+		$model = M('News');
+		$pid = $_REQUEST[$model->getPk()];
+		$model1 = M('Areaservice');
+		$data['name'] = '新闻';
+		$asid = $model1->where($data)->getField('id');
+		$model2 = M('Picture');
+		$map['pid'] = $pid;
+		$map['as_id'] = $asid;
+        $volist = $model2->where($map)->select();
+		$this->assign('volist', $volist);
+		$this->display('Public/photo');
 	}
-	
-	public function upload(){
-		//设置上传目录		
-		$upFilePath="./Uploads/News/picture/";
-		$file_name = $_FILES['pic']['name'];
-		$file_tmp_name = $_FILES['pic']['tmp_name'];
-		if(!is_dir($upFilePath)){
-			mkdir($upFilePath,0777,true);
-		}
-		$info = pathinfo($file_name);
-        $extend = $info['extension'];
-		$fileName = date("YmdHis").rand(100,999).'.'.$extend;
-		$file=@move_uploaded_file($file_tmp_name,$upFilePath.$fileName);  
 
-		if($file === FALSE){
-			echo json_encode(array('code'=>'1','message'=>'上传失败','file_url'=>$upFilePath.$fileName));
-		}else{
-			echo json_encode(array('code'=>'0','message'=>'上传成功','file_url'=>$upFilePath.$fileName));
+	public function deletePic() {
+		//删除指定记录
+		$model = M('Picture');
+		if (!empty($model)) {
+			$id = $_POST['id'];
+			if (isset($id)) {
+				$res = substr($id, strlen($id) - 1);
+				$data['id'] = $id;
+				if ($res == 's') {
+					$picurl = 'minurl';
+				} else {
+					$picurl = 'picurl';
+				}
+				$data['id'] = $id;
+				$url = $model->where($data)->getField($picurl);
+				if (false !== $model->where($data)->setField($picurl,null)) {
+					chmod($url,0777);
+					@unlink($url);
+					$this->success(L('删除成功'));
+				} else {
+					$this->error(L('删除失败'));
+				}
+			} else {
+				$this->error('非法操作');
+			}
 		}
 	}
+
+	public function uploadAdd() {
+		$type = $_REQUEST['type'];
+		$this->assign('type', $type);
+		$this->display('Public/upload');
+	}
+
+
+	public function upload(){
+		//设置上传目录
+		$type = $_POST['type'];		
+		$upFilePath = "./Uploads/News/".$type."/";
+		$this -> uploadPic($upFilePath);
+	}
 	
+	//xheditor上传文件保存
+	public function uploadAll(){
+ 		header('Content-Type: text/html; charset=UTF-8');
+		$inputName='filedata';//表单文件域name
+		$attachDir='./Uploads/News';//上传文件保存路径，结尾不要带/
+		$dirType=1;//1:按天存入目录 2:按月存入目录 3:按扩展名存目录  建议使用按天存
+		$maxAttachSize=2097152;//最大上传大小，默认是2M
+		$upExt='txt,rar,zip,jpg,jpeg,gif,png,swf,wmv,avi,wma,mp3,mid';//上传扩展名
+		$msgType=2;//返回上传参数的格式：1，只返回url，2，返回参数数组
+		$immediate=isset($_GET['immediate'])?$_GET['immediate']:0;//立即上传模式，仅为演示用
+		ini_set('date.timezone','Asia/Shanghai');//时区
+
+		$err = "";
+		$msg = "''";
+		$tempPath=$attachDir.'/'.date("YmdHis").mt_rand(10000,99999).'.tmp';
+		$localName='';
+
+		if(isset($_SERVER['HTTP_CONTENT_DISPOSITION'])&&preg_match('/attachment;\s+name="(.+?)";\s+filename="(.+?)"/i',$_SERVER['HTTP_CONTENT_DISPOSITION'],$info)){//HTML5上传
+			file_put_contents($tempPath,file_get_contents("php://input"));
+			$localName=urldecode($info[2]);
+		}
+		else{//标准表单式上传
+			$upfile=@$_FILES[$inputName];
+			if(!isset($upfile))$err='文件域的name错误';
+			elseif(!empty($upfile['error'])){
+				switch($upfile['error'])
+				{
+					case '1':
+						$err = '文件大小超过了php.ini定义的upload_max_filesize值';
+						break;
+					case '2':
+						$err = '文件大小超过了HTML定义的MAX_FILE_SIZE值';
+						break;
+					case '3':
+						$err = '文件上传不完全';
+						break;
+					case '4':
+						$err = '无文件上传';
+						break;
+					case '6':
+						$err = '缺少临时文件夹';
+						break;
+					case '7':
+						$err = '写文件失败';
+						break;
+					case '8':
+						$err = '上传被其它扩展中断';
+						break;
+					case '999':
+					default:
+						$err = '无有效错误代码';
+				}
+			}
+			elseif(empty($upfile['tmp_name']) || $upfile['tmp_name'] == 'none')$err = '无文件上传';
+			else{
+				move_uploaded_file($upfile['tmp_name'],$tempPath);
+				$localName=$upfile['name'];
+			}
+		}
+
+		if($err==''){
+			$fileInfo=pathinfo($localName);
+			$extension=$fileInfo['extension'];
+			if(preg_match('/^('.str_replace(',','|',$upExt).')$/i',$extension))
+			{
+				$bytes=filesize($tempPath);
+				if($bytes > $maxAttachSize)$err='请不要上传大小超过'.$this->formatBytes($maxAttachSize).'的文件';
+				else
+				{
+					switch($dirType)
+					{
+						case 1: $attachSubDir = 'day_'.date('ymd'); break;
+						case 2: $attachSubDir = 'month_'.date('ym'); break;
+						case 3: $attachSubDir = 'ext_'.$extension; break;
+					}
+					$attachDir = $attachDir.'/'.$attachSubDir;
+					if(!is_dir($attachDir))
+					{
+						@mkdir($attachDir, 0777);
+						@fclose(fopen($attachDir.'/index.htm', 'w'));
+					}
+					PHP_VERSION < '4.2.0' && mt_srand((double)microtime() * 1000000);
+					$newFilename=date("YmdHis").mt_rand(1000,9999).'.'.$extension;
+					$targetPath = $attachDir.'/'.$newFilename;
+					
+					rename($tempPath,$targetPath);
+					@chmod($targetPath,0755);
+					$targetPath=$this->jsonString($targetPath);
+
+					if($immediate=='1')$targetPath='!'.$targetPath;
+					if($msgType==1)$msg="'$targetPath'";
+					else $msg="{'url':'".$targetPath."','localname':'".$this->jsonString($localName)."','id':'1'}";//id参数固定不变，仅供演示，实际项目中可以是数据库ID
+				}
+			}
+			else $err='上传文件扩展名必需为：'.$upExt;
+
+			@unlink($tempPath);
+		}
+
+		echo "{'err':'".$this->jsonString($err)."','msg':".$msg."}";
+	}
+
+	function jsonString($str)
+	{
+		return preg_replace("/([\\\\\/'])/",'\\\$1',$str);
+	}
+	
+	function formatBytes($bytes) {
+		if($bytes >= 1073741824) {
+			$bytes = round($bytes / 1073741824 * 100) / 100 . 'GB';
+		} elseif($bytes >= 1048576) {
+			$bytes = round($bytes / 1048576 * 100) / 100 . 'MB';
+		} elseif($bytes >= 1024) {
+			$bytes = round($bytes / 1024 * 100) / 100 . 'KB';
+		} else {
+			$bytes = $bytes . 'Bytes';
+		}
+		return $bytes;
+	}
+
    public function rubAll(){
     	$name='News';
 		$model = M($name);

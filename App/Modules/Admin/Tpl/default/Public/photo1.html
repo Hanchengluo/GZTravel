@@ -1,0 +1,40 @@
+<body class="loading">
+	<div class="pro-switch">
+		<div class="slider">
+			<div class="flexslider">
+				<ul class="slides">
+				<foreach name="volist" item="vo">
+					<li>
+						<div class="img"><img id="<{$vo.id}>" class="image" src="<{$vo.picurl}>" height="480" width="630" alt="" /></div>
+					</li>
+				</foreach>	
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+<script defer src="../Public/dwz/js/slider.js"></script> 
+<script type="text/javascript">
+    $(function(){
+      $('.flexslider').flexslider({
+        animation: "slide",
+        start: function(slider){
+          $('body').removeClass('loading');
+        }
+      });
+    });
+
+	$(".image").dblclick(function(){
+		var imgid = $(this).attr("id");
+     	alertMsg.confirm("您确定要删除吗？", {
+				okCall: function(){
+					$.post("__URL__/deletePic/", {id: imgid}, DWZ.ajaxDone, "json");
+					var dialog = $.pdialog.getCurrent();
+            	$.pdialog.reload(dialog.data("url"));
+				},
+				cancelCall : function() {}
+		});
+	});
+  </script>
+</div>
+

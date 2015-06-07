@@ -110,9 +110,9 @@ class NewstypeAction extends CommonAction{
 		$model = M($name);
     	$pk=$model->getPk ();  
 		$data[$pk]=array('in', $_POST['ids']);
-		$data1['islock']=1;
-		$model->where($data)->save($data1);
-		$this->success('更新成功');
+		$data['islock']=1;
+		$model->where($data)->save($data);
+		$this->success('加入回收站成功');
 	}
 
 	public function delAll(){
@@ -120,8 +120,14 @@ class NewstypeAction extends CommonAction{
 		$model = M($name);
     	$pk=$model->getPk ();  
 		$data[$pk]=array('in', $_POST['ids']);
-		$model->where($data)->delete();
-		$this->success('更新成功');
+		$data1['nt_id'] = array('in',$_POST['ids']);
+		$count = M('News')->where($data1)->count('id');
+		if ($count > 0) {
+			$this->error(L('该类型的新闻已存在，请先删除该类型的新闻后，再删除！'));
+		} else {
+			$model->where($data)->delete();
+			$this->success('删除类型成功');	
+		}
 	}
 
    public function recAll(){
@@ -131,7 +137,7 @@ class NewstypeAction extends CommonAction{
 		$data[$pk]=array('in', $_POST['ids']);
 		$data1['islock']=0;
 		$model->where($data)->save($data1);
-		$this->success('更新成功');
+		$this->success('恢复成功');
 	}
 
 	public function changeState() {

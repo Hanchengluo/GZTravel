@@ -1,0 +1,18 @@
+<div class="pageContent">
+<script type="text/javascript">
+$(function() {
+    $('#file_upload').uploadify({
+        'swf'      : '../Public/uploadify/uploadify.swf',
+        'uploader' : '__URL__/uploadify',
+        'buttonText' : '上传',
+        'onUploadSuccess' : function(file, data, response) {
+
+            console.log(data);
+        },
+    });
+});
+</script>
+
+<input type="file" name="file_upload" id="file_upload" />
+</div>
+

@@ -3,9 +3,9 @@
 <div class="pageContent">
 	<div class="panelBar">
 		<ul class="toolBar">
-			<li><a class="add" href="__URL__/add" target="dialog" width="550" height="380" rel="user_msg" title="添加服务"><span>添加</span></a></li>
-			<li><a class="delete" href="__URL__/delete/id/{item_id}/navTabId/service" target="ajaxTodo" title="确定要删除吗?"><span>删除</span></a></li>
-			<li><a class="edit" href="__URL__/edit/id/{item_id}"  width="550" height="380" target="dialog"><span>修改服务</span></a></li>	
+			<li><a class="add" href="__URL__/add" target="dialog" width="550" height="380" rel="user_msg" title="添加服务"><span>添加服务</span></a></li>
+			<li><a class="edit" href="__URL__/edit/id/{item_id}"  width="550" height="380" target="dialog" title="修改服务"><span>修改服务</span></a></li>
+			<li><a class="delete" href="__URL__/delete/id/{item_id}/navTabId/service" target="ajaxTodo" title="确定要删除吗?"><span>删除服务</span></a></li>
 			<li class="line">line</li>
 			<li><a class="icon"  href="javascript:navTabPageBreak();"><span>刷新</span></a></li>	
 		</ul>
@@ -15,38 +15,42 @@
 			<tr>
 				<th width="10">ID</th>
 				<th width="40">服务名</th>
-				<th width="30">级别</th>
-				<th width="30">所属父级</th>
-				<th width="30">状态</th>
+<!--				<th width="30">级别</th>-->
+				<th width="30">所属分组</th>
+				<!--<th width="30">状态</th>-->
 				<th width="30">操作</th>	
 			</tr>
 		</thead>
 		<tbody>
 			<foreach name="list" item="vo">
-				<tr target="item_id" rel="<{$vo.id}>" <if condition="$vo['username']==C('RBAC_SUPERADMIN')">style=""</if> >
-					<td><{$vo.id}></td>
-					<td><{$vo.name}></td>
-					<td><{$vo.level}></td>
-					<td><{$vo.pid}></td>
-					<td><{$vo.islock|islock=###}></td>
-                    <td>
-<script>
-function updateLock(id,num){
-	$.post('__URL__/lock/navTabId/service/callbackType/closeCurrent',{'id':id,'islock':num},function(data){
-		if (data) {
-			navTabPageBreak();
-		};	
-	});	
-}
-</script>
-						<if condition="$vo.islock eq 1">
-							<a href="javascript:void(0);" onclick="updateLock(<{$vo.id}>,0);">解锁</a>
-						<else/>
-						    <a href="javascript:void(0);" onclick="updateLock(<{$vo.id}>,1);">锁定</a>
+				<foreach name="parent" item="volist">
+					<if condition="$vo['pid'] eq $volist['id']">
+					<tr target="item_id" rel="<{$vo.id}>,<{$vo.level}>" <if condition="$vo['username']==C('RBAC_SUPERADMIN')">style=""</if> >
+						<td><{$vo.id}></td>
+						<td><{$vo.name}></td>
+						<!--<td><{$vo.level}></td>-->
+						<td><{$volist.name}></td>
+						<!--<td><{$vo.islock|islock=###}></td>-->
+						<td>
+						<script>
+						function updateLock(id,num){
+							$.post('__URL__/lock/navTabId/service/callbackType/closeCurrent',{'id':id,'islock':num},function(data){
+								if (data) {
+									navTabPageBreak();
+								};
+							});
+						}
+						</script>
+							<if condition="$vo.islock eq 1">
+								<a href="javascript:void(0);" onclick="updateLock(<{$vo.id}>,0);">显示</a>
+							<else/>
+								<a href="javascript:void(0);" onclick="updateLock(<{$vo.id}>,1);">隐藏</a>
+							</if>
+						</td>
+
+					</tr>
 						</if>
-					</td>
-					
-				</tr>
+				</foreach>
 			</foreach>
 		</tbody>
 	</table>

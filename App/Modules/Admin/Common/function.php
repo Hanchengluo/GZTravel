@@ -38,6 +38,22 @@ function node_merge($node,$access=null,$pid = 0){
 	return $arr;
 }
 
+function showOnline($status, $id, $callback="") {
+	switch ($status) {
+		case 0 :
+			$info = '<a href="__URL__/changeState/id/'.$id.'/isonline/0" target="ajaxTodo" callback="'.$callback.'">未上线</a>';
+			break;
+		case 1 :
+			$info = '<a href="__URL__/changeState/id/'.$id.'/isonline/1" target="ajaxTodo" callback="'.$callback.'">已上线</a>';
+			break;
+	}
+	return $info;
+}
+function resourceURL($url){
+	list(,$temp)=explode('/',__URL__);
+	return 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER["SERVER_PORT"].'/'.$temp.substr($url, 1);
+}
+
 //获取数据库表前缀
 function prefix(){
 	return C('DB_PREFIX');

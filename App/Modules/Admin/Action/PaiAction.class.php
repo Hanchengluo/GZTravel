@@ -1,57 +1,186 @@
 <?php 
 /**
-* 景区类
+* 拍类
 * @author  <[s@easycms.cc]>
 */
 class PaiAction extends CommonAction
 {
-		public function index() {
+
+	public function index() {
+
 		//列表过滤器，生成查询Map对象
 		$map = $this->_search('Pai');
 		if(method_exists($this, '_filter')) {
 			$this->_filter($map);
 		}
+		$map['islock']=0;
+		$map['state'] = 0;
 		$model = M('Pai');
 		if (!empty($model)) {
 			$this->_list($model, $map);
 		}
+
+		$this->display('index');
+		return;
+	}
+
+
+	// 审核通过
+	public function pass() {
+		//列表过滤器，生成查询Map对象
+
+		$map = $this->_search('Pai');
+		if(method_exists($this, '_filter')) {
+			$this->_filter($map);
+		}
+		$map['islock']=0;
+		$map['state'] = 1;
+		$model = M('Pai');
+		if (!empty($model)) {
+			$this->_list($model, $map);
+		}
+
+		$this->display('pass');
+		return;
+
+	}
+
+	// 审核未过
+	public function nopass() {
+		//列表过滤器，生成查询Map对象
+		$map = $this->_search('Pai');
+		if(method_exists($this, '_filter')) {
+			$this->_filter($map);
+		}
+		$map['islock']=0;
+		$map['state'] = 2;
+		$model = M('Pai');
+		if (!empty($model)) {
+			$this->_list($model, $map);
+		}
+		$this->display('nopass');
+		return;
+	}
+
+	// 加入未审核
+	public function shenHeState0(){
+		$model = M('pai');
+
+		$data["id"] = $_GET["id"];
+		$data["state"] = 0;
+
+		if(false !== $model->save($data)) {
+			//成功提示
+			$this->success(L('更新成功'));
+		} else {
+			//错误提示
+			$this->error(L('更新失败'));
+		}
+	}
+
+	// 加入审核通过
+	public function shenHeState1(){
+		$model = M('pai');
+
+		$data["id"] = $_GET["id"];
+		$data["state"] = 1;
+		
+		if(false !== $model->save($data)) {
+			//成功提示
+			$this->success(L('更新成功'));
+		} else {
+			//错误提示
+			$this->error(L('更新失败'));
+		}
+	}
+
+
+
+	// 加入审核未通过
+	public function shenHeState2(){
+		$model = M('pai');
+		$data["id"] = $_GET["id"];
+		$data["state"] = 2;
+		if(false !== $model->save($data)) {
+			//成功提示
+			$this->success(L('更新成功'));
+		} else {
+			//错误提示
+			$this->error(L('更新失败'));
+		}
+	}
+
+
+
+
+
+
+	public function rubbish() {
+		//列表过滤器，生成查询Map对象
+		$map = $this->_search('Pai');
+		if(method_exists($this, '_filter')) {
+			$this->_filter($map);
+		}
+		$map['islock']=1;
+		$model = M('Pai');
+		if (!empty($model)) {
+			$this->_list($model, $map);
+		}
+
 		$this->display();
 		return;
+	}
+
+	public function search() {
+		//列表过滤器，生成查询Map对象
+		$map = $this->_search('Zuobiao');
+		if(method_exists($this, '_filter')) {
+			$this->_filter($map);
+		}
+		$model = M('Zuobiao');
+		$map['islock'] = 0;
+		if (!empty($model)) {
+			$this->_list($model, $map);
+		}
+		$this->display(zuobiao);
 	}
 
 	//添加搜索方法
 	public function _filter(&$map){
 		//判断是否有搜索条件
 		if(!empty($_REQUEST['keyword'])){
-			$map['name']=array("like","%{$_REQUEST['keyword']}%");
+			$map['title']=array("like","%{$_REQUEST['keyword']}%");
 		}
 	}	
 	
 	public function add() {
-		$this->display('add');
+
+		$this->display();
 	}
 	
-	public function test() {
-		$this->display('test');
-	}
 	
 	public function insert(){
-		$model = D('category');
-		unset ( $_POST [$model->getPk()] );
+		$model = D('Pai');
+		$pai=array(
+				'title'=>strip_tags(I('title')),
+				'comment'=>strip_tags(I('comment')),
+				'updatetime'=>time()
+			);
 		
 		if (false === $model->create()) {
 			$this->error($model->getError());
 		}
 		//保存当前数据对象
-		if ($result = $model->add()) { //保存成功
+		if ($result = $model->add($pai)){ //保存成功
 			// 回调接口
 			if (method_exists($this, '_tigger_insert')) {
 				$model->id = $result;
 				$this->_tigger_insert($model);
 			}
-			
+
 			//成功提示
 			$this->success(L('新增成功'));
+
 		} else {
 			//失败提示
 			$this->error(L('新增失败').$model->getLastSql());
@@ -59,7 +188,7 @@ class PaiAction extends CommonAction
 	}
 	
 	public function edit() {
-		$model = M('category');
+		$model = M('Pai');
 		$id = $_REQUEST[$model->getPk()];
 		$vo = $model->find($id);
 		$this->assign('vo', $vo);
@@ -67,7 +196,10 @@ class PaiAction extends CommonAction
 	}
 	
 	public function update() {
-		$model = D('category');		
+		$model = D('Pai');
+		$_POST['title'] = strip_tags($_POST['title']);
+		$_POST['comment'] = strip_tags($_POST['comment']);
+
 		if(false === $model->create()) {
 			$this->error($model->getError());
 		}
@@ -88,14 +220,22 @@ class PaiAction extends CommonAction
 	public function delete() {
 		//删除指定记录
 		$model = M('Pai');
-		if (!empty($model)) {
+		$model1 = M('Photos');
+		if (!empty($model) && !empty($model1)) {
 			$pk = $model->getPk();
 			$id = $_REQUEST[$pk];
 			if (isset($id)) {
-				$condition = array($pk => array('in', explode(',', $id)));
-				if (false !== $model->where($condition)->delete()) {
+				$condition1 = array($pk => array('in', explode(',', $id)));
+				$model->startTrans();
+				$data['id'] = $id;
+				$flag1 = $model->where($condition1)->delete();
+				$condition2 = array('pai_id' => array('in', explode(',', $id)));
+				$flag2 = $model1->where($condition2)->delete();
+				if ((false !== $flag1) && (false !== $flag2)) {
+					$model->commit();
 					$this->success(L('删除成功'));
 				} else {
+					$model->rollback();
 					$this->error(L('删除失败'));
 				}
 			} else {
@@ -103,21 +243,171 @@ class PaiAction extends CommonAction
 			}
 		}
 	}
-	
-	public function lock(){
-		$model = M('Pai');
-		$data['id']=(I('id'));
-		$data['islock']=I('islock');
 
-		if(false === $model->create($data)) {
+    public function addPicture() {
+		$model = M('Pai');
+		if (!empty($model)) {
+			$pid = $_REQUEST[$model->getPk()];
+			$this->assign('pid', $pid);
+		}
+		$this->display('Public/addPhotos');
+	}
+
+	public function savePic() {
+		$model = M('Photos');
+		unset ( $_POST [$model->getPk()] );
+		
+		if (false === $model->create()) {
 			$this->error($model->getError());
 		}
-		// 更新数据
-		if(false !== $model->save()) {
+		$total = $_REQUEST['total'];
+		$pid = $_REQUEST['pid'];
+
+		for ($i = 0; $i < $total; $i++) 
+		{ 
+			$data[$i]['pai_id'] = $pid;
+			$data[$i]['picurl'] = $_REQUEST['picurl'.$i.''];
+		} 
+
+		//保存当前数据对象
+		if ($result = $model->addAll($data)) { //保存成功
 			// 回调接口
-			if (method_exists($this, '_tigger_update')) {
-				$this->_tigger_update($model);
+			if (method_exists($this, '_tigger_insert')) {
+				$model->id = $result;
+				$this->_tigger_insert($model);
 			}
+			
+			//成功提示
+			$this->success(L('新增成功'));
+		} else {
+			//失败提示
+			$this->error(L('新增失败').$model->getLastSql());
+		}
+	}
+
+	public function shenhe() {
+		$model = M('Pai');
+		if (!empty($model)) {
+			$pid = $_REQUEST[$model->getPk()];
+		}
+		$model1 = M('Photos');
+		if (!empty($model1)) {
+			$map['pai_id'] = $pid;
+			// $map['islock'] = 0;
+			// $map['state'] = 0;
+        	$volist = $model1->where($map)->select();
+			$this->assign('volist', $volist);
+		}
+		$this->display('shenhephoto');
+	}
+/*	public function photo() {
+		$model = M('Pai');
+		$id = $_REQUEST[$model->getPk()];
+		$vo = $model->find($id);
+		$this->assign('vo', $vo);
+		$this->display('Public/photos');
+	}*/
+
+	public function photos() {
+		$model = M('Pai');
+		if (!empty($model)) {
+			$pid = $_REQUEST[$model->getPk()];
+		}
+		$model1 = M('Photos');
+		if (!empty($model1)) {
+			$map['pai_id'] = $pid;
+			// $map['state'] = 1;
+			// $map['islock'] = 0;
+        	$volist = $model1->where($map)->select();
+			$this->assign('volist', $volist);
+		}
+		$this->display('Public/photo1');
+	}
+
+	public function todophotos() {
+		$model = M('Pai');
+		if (!empty($model)) {
+			$pid = $_REQUEST[$model->getPk()];
+		}
+		$model1 = M('Photos');
+		if (!empty($model1)) {
+			// $map['islock'] = 0;
+			// $map['state'] = 0;
+			$map['pai_id'] = $pid;
+        	$volist = $model1->where($map)->select();
+			$this->assign('volist', $volist);
+		}
+		$this->display('Public/photo');
+	}
+
+	public function donephotos() {
+		$model = M('Pai');
+		if (!empty($model)) {
+			$pid = $_REQUEST[$model->getPk()];
+		}
+		$model1 = M('Photos');
+		if (!empty($model1)) {
+			$ids = array('1','2');
+			// $map['islock'] = 0;
+			// $map['state'] = array ('in',$ids);
+			$map['pai_id'] = $pid;
+        	$volist = $model1->where($map)->select();
+			$this->assign('volist', $volist);
+		}
+		$this->display('Public/photo');
+	}
+
+	public function uploadAdd() {
+		$type = $_REQUEST['type'];
+		$this->assign('type', $type);
+		$this->display('Public/upload');
+	}
+
+
+	public function upload(){
+		//设置上传目录
+		$type = $_POST['type'];		
+		$upFilePath = "./Uploads/Pai/".$type."/";
+		$this -> uploadPic($upFilePath);
+	}
+	
+	public function rubAll(){
+    	$name='Pai';
+		$model = M($name);
+    	$pk=$model->getPk ();  
+		$data[$pk]=array('in', $_POST['ids']);
+		$data1['islock']=1;
+		$model->where($data)->save($data1);
+		$this->success('更新成功');
+	}
+
+	public function delAll(){
+    	$name='Pai';
+		$model = M($name);
+    	$pk=$model->getPk ();  
+		$data[$pk]=array('in', $_POST['ids']);
+		$model->where($data)->delete();
+		$this->success('更新成功');
+	}
+
+   public function recAll(){
+    	$name='Pai';
+		$model = M($name);
+    	$pk=$model->getPk ();  
+		$data[$pk]=array('in', $_POST['ids']);
+		$data1['islock']=0;
+		$model->where($data)->save($data1);
+		$this->success('更新成功');
+	}
+
+	public function changeState() {
+		$model = M("Pai"); // 实例化对象
+		$pk = $model->getPk();
+		$condition[$pk]=$_REQUEST[$pk];
+		// 要修改的数据对象属性赋值
+		$data['islock'] = ($_REQUEST['islock']==0)?1:0;
+		$model->where($condition)->save($data); // 根据条件保存修改的数据
+		if(false !== $model->where($condition)->save($data)) {
 			//成功提示
 			$this->success(L('更新成功'));
 		} else {
@@ -125,16 +415,62 @@ class PaiAction extends CommonAction
 			$this->error(L('更新失败'));
 		}
 	}
-	//删除状态
-	public function delete_tag(){
+
+	/*//审核图集
+	public function shenhetjState() {
+		$model = M("Pai"); // 实例化对象
+		// 要修改的数据对象属性赋值
+		$data['id'] = I('id');
+		$data['state'] = I('state');
+		$model->save($data); // 根据条件保存修改的数据
+		if(false !== $model->save($data)) {
+			//成功提示
+			$this->success(L('审核成功'));
+		} else {
+			//错误提示
+			$this->error(L('审核失败'));
+		}
+	}
+    
+    //审核图片
+	public function shenhetpState() {
+		$model = M("Photos"); // 实例化对象
+		// 要修改的数据对象属性赋值
+		$data['id'] = $_POST['id'];
+		$data['state'] = $_REQUEST['state'];
+		$model->save($data); // 根据条件保存修改的数据
+		if(false !== $model->save($data)) {
+			//成功提示
+			if($_REQUEST['state'] == 1) {
+				$this->success(L('审核通过'));
+			} else {
+				$this->error(L('审核未过'));
+			}
+			
+		} else {
+			//错误提示
+			$this->error(L('审核失败'));
+		}
+	}*/
+
+	public function deletePic() {
 		//删除指定记录
-		$model = M('category');
+		$model = M('Picture');
 		if (!empty($model)) {
-			$pk = $model->getPk();
-			$id = $_REQUEST[$pk];
-			if (isset($id)) {	
-				$condition = array($pk => array('in', explode(',', $id)));
-				if (false !== $model->where($condition)->setField('is_delete',1)) {
+			$id = $_POST['id'];
+			if (isset($id)) {
+				$res = substr($id, strlen($id) - 1);
+				$data['id'] = $id;
+				if ($res == 's') {
+					$picurl = 'minurl';
+				} else {
+					$picurl = 'picurl';
+				}
+				$data['id'] = $id;
+				$url = $model->where($data)->getField($picurl);
+				if (false !== $model->where($data)->setField($picurl,null)) {
+					chmod($url,0777);
+					@unlink($url);
 					$this->success(L('删除成功'));
 				} else {
 					$this->error(L('删除失败'));
@@ -144,7 +480,6 @@ class PaiAction extends CommonAction
 			}
 		}
 	}
-	
 	/**
 	 * 根据表单生成查询条件
 	 * 进行列表过滤
@@ -158,6 +493,7 @@ class PaiAction extends CommonAction
 		}
 		$model = M($name);
 		$map = array();
+		//$map['islock'] = 0;
 		foreach ($model->getDbFields() as $key => $val) {
 			if (substr($key, 0, 1) == '_')
 				continue;
@@ -165,6 +501,7 @@ class PaiAction extends CommonAction
 				$map[$val] = $_REQUEST[$val];
 			}
 		}
+		//$map['islock'] = 0;
 		return $map;
 	}
 	
@@ -219,8 +556,7 @@ class PaiAction extends CommonAction
 		
 		//分页查询数据
 		$list = $model->where($map)->order($order.' '.$sort)
-						->limit($p->firstRow.','.$p->listRows)
-						->select();
+						->limit($p->firstRow.','.$p->listRows)->select();
 						
 		//回调函数，用于数据加工，如将用户id，替换成用户名称
 		if (method_exists($this, '_tigger_list')) {
@@ -242,7 +578,6 @@ class PaiAction extends CommonAction
 		$sort = $sort == 'desc' ? 1 : 0;                  //排序方式
 		
 
-		
 		//模板赋值显示
 		$this->assign('list', $list);
 		$this->assign('sort', $sort);

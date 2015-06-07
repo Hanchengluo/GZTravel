@@ -1,4 +1,4 @@
-<include file="Public:pagerForm" />
+<include file="Public:rubbishPagerForm" />
 <div class="pageHeader">
 	<form rel="pagerForm" onsubmit="return navTabSearch(this);" method="post">
 	<input type="hidden" name="numPerPage" value="<{$numPerPage}>" /><!--每页显示多少条-->
@@ -29,8 +29,8 @@
 			<tr>
 			    <th width="10"><input type="checkbox" group="ids[]" class="checkboxCtrl">ID</th>
 				<th width="30">活动标题</th>
-				<th width="40">开始日期</th>
-				<th width="40">结束日期</th>
+				<th width="30">活动简介</th>
+				<th width="40">活动日期</th>
 				<th width="40">发布时间</th>
 				<th width="40">发布者</th>
 				<th width="30">操作</th>
@@ -41,8 +41,8 @@
 				<tr target="item_id" rel="<{$vo.id}>">
 				    <td><input name="ids[]" value="<{$vo['id']}>" type="checkbox"><{$vo.id}></td>
 					<td><{$vo.name}></td>
-					<td><{$vo.startdate}></td>
-					<td><{$vo.enddate}></td>
+					<td><{$vo.jianjie|subtext=15}></td>
+					<td><{$vo.startdate}>~<{$vo.enddate}></td>
 					<td><{$vo.updatetime|date="Y-m-d H:m:s",###}></td>
 					<td><{$vo.username}></td>
 					<td><{$vo.islock|activityrubbish=$vo['id']}></td>

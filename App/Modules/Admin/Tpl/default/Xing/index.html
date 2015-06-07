@@ -15,13 +15,17 @@
 		</table>
 	</div>
 	</form>
-</div> 
+</div>
+
 <div class="pageContent">
 	<div class="panelBar">
 		<ul class="toolBar">
-			<li><a class="add" href="__URL__/add" target="dialog" width="630" height="500" rel="xingadd" title="添加"><span>添加</span></a></li>
-			<li><a class="edit" href="__URL__/edit/id/{item_id}"  width="630" height="500" target="dialog" rel="xingedit"><span>修改</span></a></li>
-			<li><a  target="selectedTodo" target="dialog" rel="ids[]" href="__URL__/rubAll" class="delete" ><span>批量放入回收站</span></a></li>	
+			<li><a class="add" href="__URL__/add" target="dialog" width="1200" height="600" rel="xingadd" title="添加行程"><span>添加行程</span></a></li>
+			<li><a class="edit" href="__URL__/edit/id/{item_id}"  width="1200" height="600" target="dialog" rel="xingedit"><span>修改行程</span></a></li>
+			<li><a  target="selectedTodo" target="dialog" rel="ids[]" href="__URL__/rubAll" class="delete" ><span>批量放入回收站</span></a></li>
+			<li class="line">line</li>	
+			<li><a class="add" href="__URL__/addPicture/id/{item_id}"  width="630" height="500" title="添加图片" target="dialog" rel="addpicture"><span>添加图片</span></a></li>	
+			<li><a class="edit" href="__URL__/photos/id/{item_id}" target="dialog" width="630" height="500" rel="yulanphotos" title="<h1 style='color:red;'>温馨提示：双击当前图片可以删除图片</h1>"><span>预览图片</span></a></li>
 			<li class="line">line</li>
 			<li><a class="icon"  href="javascript:navTabPageBreak();"><span>刷新</span></a></li>	
 		</ul>
@@ -31,23 +35,54 @@
 			<tr>
 			    <th width="10"><input type="checkbox" group="ids[]" class="checkboxCtrl">ID</th>
 				<th width="30">行程标题</th>
+				<th width="30">行程类型</th>
+				<th width="40">行程天数(人)</th>
+				<th width="40">行程人数(天)</th>
+				<th width="40">行程里程(公里)</th>
+				<th width="40">经过区域</th>
 				<th width="40">发布时间</th>
+				<th width="40">排序</th>
+				<th width="40">是否为头图</th>
+				<th width="40">推荐星级</th>
 				<th width="40">发布者</th>
 				<th width="30">操作</th>
 			</tr>
 		</thead>
 		<tbody>
 			<foreach name="list" item="vo">
-				<tr target="item_id" rel="<{$vo.id}>">
-				    <td><input name="ids[]" value="<{$vo['id']}>" type="checkbox"><{$vo.id}></td>
-					<td><{$vo.title}></td>
-					<td><{$vo.updatetime|date="Y-m-d H:m:s",###}></td>
-					<td><{$vo.username}></td>
-					<td><{$vo.islock|xingrubbish=$vo['id']}></td>
-				</tr>
+				<foreach name="xinglist" item="xingvo">
+					<if condition="$vo['xt_id'] eq $xingvo['id']">
+						<tr target="item_id" rel="<{$vo.id}>">
+						    <td><input name="ids[]" value="<{$vo['id']}>" type="checkbox"><{$vo.id}></td>
+							<td><{$vo.title}></td>
+							<td><{$xingvo.name}></td>
+							<td><{$vo.num}></td>
+							<td><{$vo.day}></td>
+							<td><{$vo.licheng}></td>
+							<td><{$vo.through}></td>
+							<td><{$vo.updatetime|date="Y-m-d H:m:s",###}></td>
+							<td><input onblur="updateSort(this);" type="text" style="width:30px;border:0;" name="<{$vo.id}>" value="<{$vo.sort}>"></td>
+							<td><{$vo.recommend|isok=###}></td>
+							<td><{$vo.star}></td>
+							<td><{$vo.username}></td>
+							<td><{$vo.islock|xingrubbish=$vo['id']}></td>
+						</tr>
+					</if>
+				</foreach>
 			</foreach>
 		</tbody>
 	</table>
+	<script>
+		function updateSort(obj){
+			$id=$(obj).attr('name');
+			$value=$(obj).attr('value');
+			$.post('__URL__/update/navTabId/xing/callbackType/closeCurrent' , {'id':$id,'sort':$value} , function(){
+				$(obj).html($value);
+			});
+			navTabPageBreak();
+		}
+
+	</script>
 	<div class="panelBar">
 		<div class="pages">
 			<span>显示</span>

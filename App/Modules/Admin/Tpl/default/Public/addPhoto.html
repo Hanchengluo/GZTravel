@@ -1,0 +1,42 @@
+<include file="Public:pagerForm" />
+<div class="pageContent">
+	<form method="post" action="__URL__/savePhotos/callbackType/closeCurrent"  class="pageForm required-validate"
+		onsubmit="return validateCallback(this,dialogAjaxDone);">
+		<input type="hidden"  id="pid" name="pid" value="<{$pid}>"/>
+		<input type="hidden"  id="as_id" name="as_id" value="<{$asid}>"/>
+
+		<div class="pageFormContent" layoutH="78" id="upload">
+			<dl style="width: 550px;">
+				<dt style="width: 150px;">大图上传：</dt>
+				<dd style="width: 350px;">
+					<input type="hidden"  id="picurl" name="picurl"/>
+					<input id="picurl1" type="text"  readonly="readonly" style="width:300px;" name="orgLookup1.filedir" suggestFields="filedir" lookupGroup="orgLookup1"/>
+					<a class="btnLook" href="__URL__/uploadAdd/type/picture" width="400" height="400" rel="fileadd1" lookupgroup="orgLookup1"></a>
+				</dd>
+			</dl>
+			<dl style="width: 550px;">
+				<dt style="width: 150px;">小图上传(比例为3:2)：</dt>
+				<dd style="width: 350px;">
+					<input type="hidden"  id="minurl" name="minurl"/>
+					<input id="minurl1" type="text"  readonly="readonly" style="width:300px;" name="orgLookup.filedir" suggestFields="filedir" lookupGroup="orgLookup"/>
+					<a class="btnLook" href="__URL__/uploadAdd/type/picture" width="400" height="400" rel="fileadd" lookupgroup="orgLookup"></a>
+				</dd>
+			</dl>
+			<dl style="color:red;margin-top:10px;">温馨提示：大图小图有且只能上传一张。</dl>
+		</div>
+
+		<script>
+			function setValue() {
+				$('#picurl').val($('#picurl1').val());
+				$('#minurl').val($('#minurl1').val());
+			}
+		</script>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit" onclick="return setValue();">保存</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+</div>
+

@@ -1,7 +1,7 @@
 <div class="pageContent">
 	<form method="post" action="__URL__/insert/navTabId/xing/callbackType/closeCurrent"  
 		onsubmit="return validateCallback(this,dialogAjaxDone);" target="dialog">
-		<div class="pageFormContent" layoutH="60">
+		<div class="pageFormContent" layoutH="60" style="width:50%;float:left">
 			<dl>
 				<dt>行程类型：</dt>
 				<dd>			
@@ -16,36 +16,287 @@
 				<dt>行程标题：</dt>
 				<dd><input type="text" class="required"  style="width:100%" name="title"/></dd>
 			</dl>
-			<dl>
-				<dt>行程图片：</dt>
+			<dl class="nowrap" >
+				<dt>行程简介：</dt>
 				<dd>
-				<input type="hidden"  id="picurl" name="picurl"/>
-				<input id="picurl1" type="text"  readonly="readonly" style="width:70%" name="orgLookup.filedir" suggestFields="filedir" lookupGroup="orgLookup"/>
-				<a class="btnLook" href="__URL__/uploadAdd" width="400" height="400" rel="xingadd" lookupgroup="orgLookup"></a>
+				<textarea rows = "10" class="required" style="width:95%" name="jianjie"></textarea>
 				</dd>
-            </dl>
-			<dl  class="nowrap">
+			</dl>
+<!--			<dl  class="nowrap">
 				<dt>行程内容：</dt>
 				<dd>
-					<textarea id="elm1" name="comment"  style="width:100%;display: none;" rows="20" >
-					</textarea>
+					<textarea id="elm1" name="comment"  style="width:100%;display: none;" rows="20" ></textarea>
 					<script>
-						$('#elm1').xheditor({upLinkUrl:"__URL__/upload",upLinkExt:"zip,rar,txt",upImgUrl:"__URL__/upload",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"__URL__/upload",upFlashExt:"swf",upMediaUrl:"__URL__/upload",upMediaExt:"avi",urlBase:'__ROOT__/'});
+						$('#elm1').xheditor({tools:'Cut,Copy,Paste,Pastetext,|,Source,Blocktag,FontSize,Blod,Italic,Underline,Strikethrough,|,FontColor,BackColor,SelectAll,|,Removeformat,Align,List,Outdent,Indent,Fullscreen,About'});
 					</script>
+				</dd>
+			</dl>-->
+			<dl>
+				<dt>行程选择(坐标)：</dt>
+				<dd>
+					<textarea class="required" readonly style="width:160%;" name="zuobiao" id="zuobiao"></textarea>
+				</dd>
+			</dl>
+			<dl style="color:red;margin-top: 29px;">温馨提示：经过区域添加时以逗号‘,’分开，例：白云公园，塔山公园。</dl>
+			<dl style="margin-top: 1px;">
+				<dt>经过区域：</dt>
+				<dd>
+					<textarea class="required" style="width:160%;" name="through" id="through"></textarea>
+				</dd>
+			</dl>
+			<dl style="margin-top: 30px;">
+				<dt>里程距离：</dt>
+				<dd>
+					<input class="required" style="width:160%;" name="licheng" id="licheng" />
+				</dd>
+			</dl>
+			<dl style="margin-top: 30px;">
+				<dt>走过人数：</dt>
+				<dd>
+					<input class="required" style="width:160%;" name="num" id="num" />
+				</dd>
+			</dl>
+			<dl style="margin-top: 30px;">
+				<dt>行程天数：</dt>
+				<dd>
+					<input class="required" style="width:160%;" name="day" id="day" />
+				</dd>
+			</dl>
+			<dl>
+				<dt>是否为头图：</dt>
+				<dd>
+					是<input type="radio" class="required"   name="recommend" value="1" <if condition="$vo['recommend'] eq 1">checked</if> />&nbsp;&nbsp;&nbsp;否<input type="radio" class="required"   name="recommend" value="0" <if condition="$vo['recommend'] eq 0">checked</if> />
+				</dd>
+			</dl>
+			<dl>
+				<dt>推荐星级</dt>
+				<dd>
+					<select name="star" style="width:100%">
+						<option value="0" selected>0颗星</option>
+						<option value="0.5">0.5颗星</option>
+						<option value="1">1颗星</option>
+						<option value="1.5">1.5颗星</option>
+						<option value="2">2颗星</option>
+						<option value="2.5">2.5颗星</option>
+						<option value="3">3颗星</option>
+						<option value="3.5">3.5颗星</option>
+						<option value="4">4颗星</option>
+						<option value="4.5">4.5颗星</option>
+						<option value="5">5颗星</option>
+					</select>
+				</dd>
+			</dl>
+			<dl></dl>
+			<dl style="color:red;">温馨提示：周边选择时可按住Ctrl键进行多选。</dl>
+			<dl style="margin-top:20px;">
+				<dt>周边旅馆：</dt>
+				<dd>			
+				<select name="zblg[]" id="zblg" style="width:100%" multiple="multiple">
+					<foreach name="zblglist" item="volist">
+						<option value="<{$key}>"><{$volist}></option>
+					</foreach>
+				</select>
+				</dd>
+			</dl>
+			<dl style="margin-top:60px;">
+				<dt>周边餐饮：</dt>
+				<dd>			
+				<select name="zbcy[]" id="zbcy" style="width:100%" multiple="multiple">
+					<foreach name="zbcylist" item="volist">
+						<option value="<{$key}>"><{$volist}></option>
+					</foreach>
+				</select>
+				</dd>
+			</dl>
+			<dl  style="margin-top:60px;">
+				<dt>周边商店：</dt>
+				<dd>			
+				<select name="zbsd[]" id="zbsd" style="width:100%" multiple="multiple">
+					<foreach name="zbsdlist" item="volist">
+						<option value="<{$key}>"><{$volist}></option>
+					</foreach>
+				</select>
+				</dd>
+			</dl>
+			<dl style="margin-top:60px;">
+				<dt>周边景区：</dt>
+				<dd>			
+				<select name="zbjq[]" id="zbjq" style="width:100%" multiple="multiple">
+					<foreach name="zbjqlist" item="volist">
+						<option value="<{$key}>"><{$volist}></option>
+					</foreach>
+				</select>
 				</dd>
 			</dl>
 		</div>
-			<script>
-			   function setValue() {
-					$('#picurl').val($('#picurl1').val());
+		<span style="color:red;">温馨提示：移动鼠标到地图上右键添加和删除行程点，也可以在搜索出的图标上双击添加行程点。</span>
+		<span>
+			<span>区域名称</span>
+			<span>
+			<input type="text" id="suggestId"  name="name" value=""/>
+			<input type="button" onclick="searchMap();" value="搜索">
+			</span>
+		</span>
+		
+
+		<div  id="allmap" style="width:60%;float:left;margin-top:20px;">			
+		</div>
+
+		<script type="text/javascript">
+			//地图属性
+			$("#allmap").css({
+				"width":"550px",
+				"height":"500px",
+				"overflow":"hidden",
+				"margin":"10",
+				"font-family":"微软雅黑"
+			});
+
+			// 百度地图API功能
+			var map = new BMap.Map("allmap");    // 创建Map实例
+			map.centerAndZoom(new BMap.Point(106.655, 26.653), 13);  // 初始化地图,设置中心点坐标和地图级别
+			map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+			map.setCurrentCity("贵州");          // 设置地图显示的城市 此项是必须设置的
+			map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+			map.addControl(new BMap.NavigationControl());
+			map.disableDoubleClickZoom(true);
+
+			//var testPoint = new BMap.Point(106.655, 26.653);
+
+			var points = [];
+			var rightclickPoint = [];
+			var zuobiaos = [];
+
+			var curve = new BMapLib.CurveLine(points, {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.5}); //创建弧线对象
+			map.addOverlay(curve); //添加到地图中
+			curve.enableEditing(); //开启编辑功能
+			map.addEventListener("rightclick", function(e){
+				rightclickPoint = [];
+				rightclickPoint['lng'] = e.point.lng;
+				rightclickPoint['lat'] = e.point.lat;
+			});
+			var licheng =  parseInt(0);
+			//添加点
+			function addPoint(point) {
+				zuobiaos.push(point);
+
+				showPoint();
+				poi = new BMap.Point(point['lng'], point['lat']);
+
+				if (points.length > 0) {
+					licheng +=  parseInt(map.getDistance(points[points.length - 1],poi))/1000;
 				}
-			</script>
+				points.push(poi);
+			}
+
+			var menu = new BMap.ContextMenu();
+			var txtMenuItem = [
+				{
+					text:'添加点',
+					callback:function(){
+						addPoint(rightclickPoint);
+						$("#licheng").val(licheng);
+						curve = new BMapLib.CurveLine(points, {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.5}); //创建弧线对象
+						map.addOverlay(curve); //添加到地图中
+						curve.enableEditing(); //开启编辑功能
+					}
+				},
+				{
+					text:'删除点',
+					callback:function(){
+						map.clearOverlays();    //清除地图上所有覆盖物
+						points.pop();
+						//zuobiaos.pop();
+
+						if (points.length > 1) {
+							licheng -=  parseInt(map.getDistance(points[points.length - 1],zuobiaos.pop()))/1000;
+						}else {
+							zuobiaos.pop();
+							licheng = 0;
+						}
+						showPoint();
+						$("#licheng").val(licheng);
+						curve = new BMapLib.CurveLine(points, {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.5}); //创建弧线对象
+						map.addOverlay(curve); //添加到地图中
+						curve.enableEditing(); //开启编辑功能
+					}
+				}
+			];
+
+			for(var i=0; i < txtMenuItem.length; i++){
+				menu.addItem(new BMap.MenuItem(txtMenuItem[i].text,txtMenuItem[i].callback,100));
+			}
+			map.addContextMenu(menu);
+
+			//显示坐标
+			function showPoint() {
+				var zuobiao = '';
+				for(var i = 0; i < zuobiaos.length; i++){
+
+					zuobiao += zuobiaos[i]['lng'] + ',' + zuobiaos[i]['lat'] + ';';
+				}
+				$('#zuobiao').val(zuobiao.substr(0,zuobiao.length - 1));
+			}
+
+			function searchMap(){
+				map.clearOverlays();    //清除地图上所有覆盖物
+				function myFun(){
+					var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+					map.centerAndZoom(pp, 16);
+					var mak = new BMap.Marker(pp);
+					map.addOverlay(mak);    //添加标注
+					mak.addEventListener('dblclick', getPoint);
+					mak.addEventListener('rightclick', delPoint);
+					map.setViewport(pp);
+
+				}
+				var local = new BMap.LocalSearch(map, { //智能搜索
+				  onSearchComplete: myFun
+				});
+
+				var mapName = $('#suggestId').val();
+				local.search(mapName);
+			}
+
+			function getPoint(e) {
+				var p = e.target;
+				alert("marker的位置是" + p.getPosition().lng + "," + p.getPosition().lat);
+				rightclickPoint = [];
+				rightclickPoint['lng'] = p.getPosition().lng;
+				rightclickPoint['lat'] = p.getPosition().lat;
+				addPoint(rightclickPoint);
+				$("#licheng").val(licheng);
+				curve = new BMapLib.CurveLine(points, {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.5}); //创建弧线对象
+				map.addOverlay(curve); //添加到地图中
+				curve.enableEditing(); //开启编辑功能
+			}
+
+			function delPoint() {
+				map.clearOverlays();    //清除地图上所有覆盖物
+				//zuobiaos.pop();
+				points.pop();
+
+				if (points.length > 1) {
+					licheng -=  parseInt(map.getDistance(points[points.length - 1],zuobiaos.pop()))/1000;
+				} else {
+					zuobiaos.pop();
+					licheng = 0;
+				}
+				showPoint();
+				$("#licheng").val(licheng);
+				curve = new BMapLib.CurveLine(points, {strokeColor:"blue", strokeWeight:3, strokeOpacity:0.5}); //创建弧线对象
+				map.addOverlay(curve); //添加到地图中
+				curve.enableEditing(); //开启编辑功能
+			}
+		</script>
 		<div class="formBar">
 			<ul>
-				<li><div class="buttonActive"><div class="buttonContent"><button type="submit" onclick="return setValue();">保存</button></div></div></li>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit" >保存</button></div></div></li>
 				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
 			</ul>
 		</div>
 	</form>
 </div>
+
+
 

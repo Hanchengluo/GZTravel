@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<base href="__ROOT__/" />
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!--<title>多彩贵州活动详情</title>-->
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" >
+<link href="/GZTravel/App/Modules/Index/Tpl/default/Public/Css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="/GZTravel/App/Modules/Index/Tpl/default/Public/Css/style.css" rel="stylesheet" media="screen">
+<script src="/GZTravel/App/Modules/Index/Tpl/default/Public/Js/jquery.js"></script>
+<script src="/GZTravel/App/Modules/Index/Tpl/default/Public/Js/bootstrap.min.js"></script>
+</head>
+<body>
+<!--<div class="container">
+	<div class="col-lg-8 col-md-8 content">
+	  <div style="width:1000px;">
+		<div>
+		  <h1 align="center"><{$vo.name}></h1>
+		</div>
+		<div>
+		  <h3 align="center"><span>发布时间：<{$vo.updatetime|date="Y-m-d H:m:s",###}></span> <span style="margin-left:50px;">作者：<{$vo.username}></span> </h3>
+		</div>
+		<div>
+		  <h3 align="center"><span>开始日期：<{$vo.startdate}></span> <span style="margin-left:50px;">结束日期：：<{$vo.enddate}></span> </h3>
+		</div>
+		<div itemprop="articleBody" class="panel-body">
+			<div style="padding: 0px; margin: 0px; font-family: 微软雅黑, Arial, sans-serif; font-size: 15px; line-height: 26px;">
+			 <p style="padding: 3px 0px; margin: 0px;">
+			 <{$vo.special}>
+			</p>
+			</div>
+		</div>
+	  </div>
+	</div>
+</div>-->
+<img src="<{$vo.picurl}>" width="1024" height="100%">
+</body>
+<script type="text/javascript">
+	jQuery(document).ready(function($){
+	  $('#goTop').click(function(){$('html,body').animate({scrollTop: '0px'}, 1000);});
+	  $('#goBottom').click(function(){$('html,body').animate({scrollTop:$('#footer').offset().top}, 1000);});
+	  $('#goComments').click(function(){$('html,body').animate({scrollTop:$('#comments').offset().top}, 1000);});
+	  $('#refresh').click(function(){location.reload();});
+	});
+</script>
+</html>

@@ -1,0 +1,42 @@
+<div class="pageContent">
+	<form method="post" action="__URL__/update/navTabId/activity/callbackType/closeCurrent"  class="pageForm required-validate" 
+		onsubmit="return validateCallback(this,dialogAjaxDone);">
+		<input type="hidden" name="id" value="<{$vo.id}>"/>
+		<div class="pageFormContent" layoutH="60">
+		    <dl>
+				<dt>资源包类型</dt>
+				<dd><if condition="$vo.type == 0">打包文件<else/>地图</if></dd>
+			</dl>
+			<dl>
+				<dt>打包/上传日期</dt>
+				<dd><{$vo.archive_time|date="Y-m-d H:m:s",###}></dd>
+			</dl>
+			<dl>
+				<dt>文件版本</dt>
+				<dd><{$vo.archive_version}></dd>
+			</dl>
+			<dl>
+				<dt>状态</dt>
+				<dd><{$vo.isonline|showOnline=$vo['id']}></dd>
+			</dl>
+			<dl>
+				<dt>文件地址</dt>
+				<dd><a href="<{$vo.resource_path|resourceURL}>"><{$vo.resource_path|resourceURL}></a></dd>
+			</dl>
+			<dl class="nowrap">
+				<dt>包说明</dt>
+				<dd>
+					<textarea id="explain" name="explain"  style="width:80%;" rows="2" ><{$vo.explain}></textarea>
+				</dd>
+			</dl>
+
+		</div>
+		<div class="formBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">保存</button></div></div></li>
+				<li><div class="button"><div class="buttonContent"><button type="button" class="close">取消</button></div></div></li>
+			</ul>
+		</div>
+	</form>
+</div>
+
